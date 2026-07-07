@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "exhibits": [
+    {
+      "id": "ROBOT-001",
+      "location_id": "EXHIBIT-ROBOT",
+      "name_zh": "机器人技术示范展品",
+      "name_en": "Robotics Demonstration Exhibit",
+      "summary_zh": "用于验证视觉识别、多语言讲解和路线导航链路的模拟展品。",
+      "summary_en": "A sample exhibit used to validate visual recognition, multilingual explanation, and navigation.",
+      "facts_zh": [
+        "这是项目第一阶段使用的模拟展品，正式资料需要由团队实地调查后替换。",
+        "展品位于龙宾楼二楼走廊A的演示终点。",
+        "系统应优先使用策展资料回答，资料不足时必须说明不确定。"
+      ],
+      "facts_en": [
+        "This is placeholder exhibit data for the first project phase and must be replaced after an on-site survey.",
+        "The exhibit is located at the demonstration endpoint in Corridor A on the second floor.",
+        "The system should prioritize curated facts and explicitly state uncertainty when the facts are insufficient."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+
+# ESP-IDF / CMake build output
+**/build/
+**/sdkconfig
+xiaozhi-esp32/managed_components/
+
+# Duplicate course material kept locally
+Pitch/26SU_ENGR1000J-S4_Tech_Lecture03_System_ZHY_1.pptx
+
+# Editors and local agent state
+.vscode/
+.idea/
+.agents/
+.codex/
+
+# System files
+.DS_Store
+Thumbs.db

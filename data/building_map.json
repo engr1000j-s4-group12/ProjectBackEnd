@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "building": {
+    "id": "LONGBIN",
+    "name_zh": "龙宾楼",
+    "name_en": "Longbin Building"
+  },
+  "nodes": [
+    {
+      "id": "LB-1F-ENTRANCE",
+      "name_zh": "一楼主入口",
+      "name_en": "First-floor Main Entrance",
+      "floor": 1,
+      "kind": "entrance",
+      "aliases": ["主入口", "入口", "main entrance"],
+      "visual_landmarks": [
+        {
+          "aliases": ["玻璃双开门", "glass double doors", "玻璃入口门"],
+          "weight": 2
+        },
+        {
+          "aliases": ["龙宾楼门牌", "Longbin Building sign", "龙宾楼"],
+          "weight": 4
+        },
+        {
+          "aliases": ["室外台阶", "entrance steps", "入口台阶"],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "LB-1F-LOBBY",
+      "name_zh": "一楼大厅",
+      "name_en": "First-floor Lobby",
+      "floor": 1,
+      "kind": "checkpoint",
+      "aliases": ["大厅", "lobby"],
+      "visual_landmarks": [
+        {
+          "aliases": ["前台", "reception desk", "接待台"],
+          "weight": 3
+        },
+        {
+          "aliases": ["学院标志墙", "university logo wall", "校徽墙"],
+          "weight": 3
+        },
+        {
+          "aliases": ["大厅沙发", "lobby sofa", "等候座椅"],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "LB-1F-STAIRS-EAST",
+      "name_zh": "一楼东侧楼梯",
+      "name_en": "First-floor East Staircase",
+      "floor": 1,
+      "kind": "stairs",
+      "aliases": ["一楼楼梯"],
+      "visual_landmarks": [
+        {
+          "aliases": ["东侧楼梯", "east staircase", "楼梯台阶"],
+          "weight": 2
+        },
+        {
+          "aliases": ["1F楼层牌", "1F sign", "一楼标识"],
+          "weight": 4
+        },
+        {
+          "aliases": ["蓝色楼梯扶手", "blue stair handrail"],
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "LB-1F-ELEVATOR",
+      "name_zh": "一楼电梯",
+      "name_en": "First-floor Elevator",
+      "floor": 1,
+      "kind": "elevator",
+      "aliases": ["一楼无障碍电梯"],
+      "visual_landmarks": [
+        {
+          "aliases": ["银色电梯门", "silver elevator doors", "电梯门"],
+          "weight": 2
+        },
+        {
+          "aliases": ["1F电梯显示屏", "elevator display 1F", "1F"],
+          "weight": 4
+        },
+        {
+          "aliases": ["电梯按钮面板", "elevator button panel"],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "LB-2F-STAIRS-EAST",
+      "name_zh": "二楼东侧楼梯",
+      "name_en": "Second-floor East Staircase",
+      "floor": 2,
+      "kind": "stairs",
+      "aliases": ["二楼楼梯"],
+      "visual_landmarks": [
+        {
+          "aliases": ["东侧楼梯", "east staircase", "楼梯出口"],
+          "weight": 2
+        },
+        {
+          "aliases": ["2F楼层牌", "2F sign", "二楼标识"],
+          "weight": 4
+        },
+        {
+          "aliases": ["蓝色楼梯扶手", "blue stair handrail"],
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "LB-2F-ELEVATOR",
+      "name_zh": "二楼电梯",
+      "name_en": "Second-floor Elevator",
+      "floor": 2,
+      "kind": "elevator",
+      "aliases": ["二楼无障碍电梯"],
+      "visual_landmarks": [
+        {
+          "aliases": ["银色电梯门", "silver elevator doors", "电梯门"],
+          "weight": 2
+        },
+        {
+          "aliases": ["2F电梯显示屏", "elevator display 2F", "2F"],
+          "weight": 4
+        },
+        {
+          "aliases": ["电梯按钮面板", "elevator button panel"],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "LB-2F-CORRIDOR-A",
+      "name_zh": "二楼走廊A",
+      "name_en": "Second-floor Corridor A",
+      "floor": 2,
+      "kind": "checkpoint",
+      "aliases": ["二楼走廊", "corridor a"],
+      "visual_landmarks": [
+        {
+          "aliases": ["蓝色房间门牌", "blue room signs", "房间门牌"],
+          "weight": 3
+        },
+        {
+          "aliases": ["白色长走廊", "long white corridor", "二楼走廊"],
+          "weight": 2
+        },
+        {
+          "aliases": ["连续房门", "row of room doors"],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "EXHIBIT-ROBOT",
+      "name_zh": "机器人展品",
+      "name_en": "Robot Exhibit",
+      "floor": 2,
+      "kind": "exhibit",
+      "aliases": ["机器人", "robot exhibit"],
+      "visual_landmarks": [
+        {
+          "aliases": ["机器人展品", "robot exhibit", "白色机器人"],
+          "weight": 5
+        },
+        {
+          "aliases": ["机器人介绍展板", "robot information board"],
+          "weight": 3
+        },
+        {
+          "aliases": ["ROBOT-001", "机器人技术示范"],
+          "weight": 4
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "LB-1F-ENTRANCE",
+      "to": "LB-1F-LOBBY",
+      "distance_m": 12,
+      "bidirectional": true,
+      "accessible": true,
+      "instructions": {
+        "forward": {
+          "zh": "从主入口直行约12米，进入一楼大厅。",
+          "en": "Go straight for about 12 meters from the main entrance into the lobby."
+        },
+        "reverse": {
+          "zh": "穿过大厅直行约12米，到达主入口。",
+          "en": "Cross the lobby and continue for about 12 meters to the main entrance."
+        }
+      }
+    },
+    {
+      "from": "LB-1F-LOBBY",
+      "to": "LB-1F-STAIRS-EAST",
+      "distance_m": 8,
+      "bidirectional": true,
+      "accessible": false,
+      "instructions": {
+        "forward": {
+          "zh": "在大厅向左转，前进约8米到达东侧楼梯。",
+          "en": "Turn left in the lobby and continue for about 8 meters to the east staircase."
+        },
+        "reverse": {
+          "zh": "离开楼梯后前进约8米，回到一楼大厅。",
+          "en": "Leave the staircase and continue for about 8 meters back to the lobby."
+        }
+      }
+    },
+    {
+      "from": "LB-1F-STAIRS-EAST",
+      "to": "LB-2F-STAIRS-EAST",
+      "distance_m": 15,
+      "bidirectional": true,
+      "accessible": false,
+      "instructions": {
+        "forward": {
+          "zh": "沿楼梯上到二楼，在楼梯出口扫描下一个二维码。",
+          "en": "Take the stairs to the second floor and scan the next QR code at the exit."
+        },
+        "reverse": {
+          "zh": "沿楼梯下到一楼。",
+          "en": "Take the stairs down to the first floor."
+        }
+      }
+    },
+    {
+      "from": "LB-1F-LOBBY",
+      "to": "LB-1F-ELEVATOR",
+      "distance_m": 14,
+      "bidirectional": true,
+      "accessible": true,
+      "instructions": {
+        "forward": {
+          "zh": "穿过大厅前进约14米，到达一楼电梯。",
+          "en": "Cross the lobby for about 14 meters to reach the elevator."
+        },
+        "reverse": {
+          "zh": "离开电梯后前进约14米，回到大厅。",
+          "en": "Leave the elevator and continue for about 14 meters back to the lobby."
+        }
+      }
+    },
+    {
+      "from": "LB-1F-ELEVATOR",
+      "to": "LB-2F-ELEVATOR",
+      "distance_m": 10,
+      "bidirectional": true,
+      "accessible": true,
+      "instructions": {
+        "forward": {
+          "zh": "乘电梯到二楼，出门后扫描电梯旁的二维码。",
+          "en": "Take the elevator to the second floor and scan the QR code beside the elevator."
+        },
+        "reverse": {
+          "zh": "乘电梯到一楼。",
+          "en": "Take the elevator to the first floor."
+        }
+      }
+    },
+    {
+      "from": "LB-2F-STAIRS-EAST",
+      "to": "LB-2F-CORRIDOR-A",
+      "distance_m": 6,
+      "bidirectional": true,
+      "accessible": false,
+      "instructions": {
+        "forward": {
+          "zh": "离开楼梯后向右转，前进约6米进入二楼走廊A。",
+          "en": "Leave the staircase, turn right, and continue for about 6 meters into Corridor A."
+        },
+        "reverse": {
+          "zh": "沿走廊前进约6米，到达东侧楼梯。",
+          "en": "Continue along the corridor for about 6 meters to the east staircase."
+        }
+      }
+    },
+    {
+      "from": "LB-2F-ELEVATOR",
+      "to": "LB-2F-CORRIDOR-A",
+      "distance_m": 7,
+      "bidirectional": true,
+      "accessible": true,
+      "instructions": {
+        "forward": {
+          "zh": "出电梯后向左转，前进约7米进入二楼走廊A。",
+          "en": "Leave the elevator, turn left, and continue for about 7 meters into Corridor A."
+        },
+        "reverse": {
+          "zh": "沿走廊前进约7米，到达二楼电梯。",
+          "en": "Continue along the corridor for about 7 meters to the second-floor elevator."
+        }
+      }
+    },
+    {
+      "from": "LB-2F-CORRIDOR-A",
+      "to": "EXHIBIT-ROBOT",
+      "distance_m": 10,
+      "bidirectional": true,
+      "accessible": true,
+      "instructions": {
+        "forward": {
+          "zh": "沿走廊直行约10米，机器人展品位于右侧。",
+          "en": "Continue straight for about 10 meters. The robot exhibit is on your right."
+        },
+        "reverse": {
+          "zh": "从机器人展品向走廊入口前进约10米。",
+          "en": "Walk about 10 meters from the robot exhibit toward the corridor entrance."
+        }
+      }
+    }
+  ]
+}
