@@ -5,320 +5,3613 @@
     "name_zh": "龙宾楼",
     "name_en": "Longbin Building"
   },
+  "floor_plan": {
+    "floor": 4,
+    "source": "龙宾楼4楼楼层索引图",
+    "outline_dimensions_m": {
+      "width_m": 70,
+      "height_m": 80,
+      "width_range_m": [
+        65,
+        75
+      ],
+      "height_range_m": [
+        75,
+        85
+      ],
+      "note": "长边约80m，短边约70m；坐标为按图片位置估算。"
+    },
+    "coordinate_system": {
+      "origin": "floor_plan_top_left",
+      "x_axis": "left_to_right",
+      "y_axis": "top_to_bottom",
+      "unit": "meter"
+    }
+  },
   "nodes": [
     {
-      "id": "LB-1F-ENTRANCE",
-      "name_zh": "一楼主入口",
-      "name_en": "First-floor Main Entrance",
-      "floor": 1,
-      "kind": "entrance",
-      "aliases": ["主入口", "入口", "main entrance"],
+      "id": "LB-4F-ROOM-400A",
+      "name_zh": "400A房间",
+      "name_en": "Room 400A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400A",
+        "400A房间",
+        "Room 400A"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["玻璃双开门", "glass double doors", "玻璃入口门"],
-          "weight": 2
-        },
-        {
-          "aliases": ["龙宾楼门牌", "Longbin Building sign", "龙宾楼"],
-          "weight": 4
-        },
-        {
-          "aliases": ["室外台阶", "entrance steps", "入口台阶"],
-          "weight": 1
+          "aliases": [
+            "400A",
+            "400A房间",
+            "Room 400A"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400A",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 3.2,
+        "x_ratio": 0.035,
+        "y_ratio": 0.04,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "LB-1F-LOBBY",
-      "name_zh": "一楼大厅",
-      "name_en": "First-floor Lobby",
-      "floor": 1,
-      "kind": "checkpoint",
-      "aliases": ["大厅", "lobby"],
+      "id": "LB-4F-ROOM-400",
+      "name_zh": "400房间",
+      "name_en": "Room 400",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400",
+        "400房间",
+        "Room 400"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["前台", "reception desk", "接待台"],
-          "weight": 3
-        },
-        {
-          "aliases": ["学院标志墙", "university logo wall", "校徽墙"],
-          "weight": 3
-        },
-        {
-          "aliases": ["大厅沙发", "lobby sofa", "等候座椅"],
-          "weight": 1
+          "aliases": [
+            "400",
+            "400房间",
+            "Room 400"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400",
+      "position": {
+        "x_m": 8.4,
+        "y_m": 3.2,
+        "x_ratio": 0.12,
+        "y_ratio": 0.04,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "LB-1F-STAIRS-EAST",
-      "name_zh": "一楼东侧楼梯",
-      "name_en": "First-floor East Staircase",
-      "floor": 1,
+      "id": "LB-4F-ROOM-401A",
+      "name_zh": "401A房间",
+      "name_en": "Room 401A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "401A",
+        "401A房间",
+        "Room 401A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "401A",
+            "401A房间",
+            "Room 401A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "401A",
+      "position": {
+        "x_m": 13.65,
+        "y_m": 3.2,
+        "x_ratio": 0.195,
+        "y_ratio": 0.04,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-401C",
+      "name_zh": "401C房间",
+      "name_en": "Room 401C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "401C",
+        "401C房间",
+        "Room 401C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "401C",
+            "401C房间",
+            "Room 401C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "401C",
+      "position": {
+        "x_m": 19.95,
+        "y_m": 2.08,
+        "x_ratio": 0.285,
+        "y_ratio": 0.026,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-401B",
+      "name_zh": "401B房间",
+      "name_en": "Room 401B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "401B",
+        "401B房间",
+        "Room 401B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "401B",
+            "401B房间",
+            "Room 401B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "401B",
+      "position": {
+        "x_m": 19.95,
+        "y_m": 6.4,
+        "x_ratio": 0.285,
+        "y_ratio": 0.08,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-403",
+      "name_zh": "403房间",
+      "name_en": "Room 403",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "403",
+        "403房间",
+        "Room 403"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "403",
+            "403房间",
+            "Room 403"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "403",
+      "position": {
+        "x_m": 26.95,
+        "y_m": 4.4,
+        "x_ratio": 0.385,
+        "y_ratio": 0.055,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-405C",
+      "name_zh": "405C房间",
+      "name_en": "Room 405C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "405C",
+        "405C房间",
+        "Room 405C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "405C",
+            "405C房间",
+            "Room 405C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "405C",
+      "position": {
+        "x_m": 32.06,
+        "y_m": 2.4,
+        "x_ratio": 0.458,
+        "y_ratio": 0.03,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-405B",
+      "name_zh": "405B房间",
+      "name_en": "Room 405B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "405B",
+        "405B房间",
+        "Room 405B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "405B",
+            "405B房间",
+            "Room 405B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "405B",
+      "position": {
+        "x_m": 32.06,
+        "y_m": 6.08,
+        "x_ratio": 0.458,
+        "y_ratio": 0.076,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-405A",
+      "name_zh": "405A房间",
+      "name_en": "Room 405A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "405A",
+        "405A房间",
+        "Room 405A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "405A",
+            "405A房间",
+            "Room 405A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "405A",
+      "position": {
+        "x_m": 32.06,
+        "y_m": 9.6,
+        "x_ratio": 0.458,
+        "y_ratio": 0.12,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-407C",
+      "name_zh": "407C房间",
+      "name_en": "Room 407C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "407C",
+        "407C房间",
+        "Room 407C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "407C",
+            "407C房间",
+            "Room 407C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "407C",
+      "position": {
+        "x_m": 37.24,
+        "y_m": 2.4,
+        "x_ratio": 0.532,
+        "y_ratio": 0.03,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-407B",
+      "name_zh": "407B房间",
+      "name_en": "Room 407B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "407B",
+        "407B房间",
+        "Room 407B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "407B",
+            "407B房间",
+            "Room 407B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "407B",
+      "position": {
+        "x_m": 37.24,
+        "y_m": 6.08,
+        "x_ratio": 0.532,
+        "y_ratio": 0.076,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-407A",
+      "name_zh": "407A房间",
+      "name_en": "Room 407A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "407A",
+        "407A房间",
+        "Room 407A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "407A",
+            "407A房间",
+            "Room 407A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "407A",
+      "position": {
+        "x_m": 37.24,
+        "y_m": 9.6,
+        "x_ratio": 0.532,
+        "y_ratio": 0.12,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-409C",
+      "name_zh": "409C房间",
+      "name_en": "Room 409C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "409C",
+        "409C房间",
+        "Room 409C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "409C",
+            "409C房间",
+            "Room 409C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "409C",
+      "position": {
+        "x_m": 42.35,
+        "y_m": 2.4,
+        "x_ratio": 0.605,
+        "y_ratio": 0.03,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-409B",
+      "name_zh": "409B房间",
+      "name_en": "Room 409B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "409B",
+        "409B房间",
+        "Room 409B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "409B",
+            "409B房间",
+            "Room 409B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "409B",
+      "position": {
+        "x_m": 42.35,
+        "y_m": 6.08,
+        "x_ratio": 0.605,
+        "y_ratio": 0.076,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-409A",
+      "name_zh": "409A房间",
+      "name_en": "Room 409A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "409A",
+        "409A房间",
+        "Room 409A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "409A",
+            "409A房间",
+            "Room 409A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "409A",
+      "position": {
+        "x_m": 42.35,
+        "y_m": 9.6,
+        "x_ratio": 0.605,
+        "y_ratio": 0.12,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-411C",
+      "name_zh": "411C房间",
+      "name_en": "Room 411C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "411C",
+        "411C房间",
+        "Room 411C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "411C",
+            "411C房间",
+            "Room 411C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "411C",
+      "position": {
+        "x_m": 47.46,
+        "y_m": 2.4,
+        "x_ratio": 0.678,
+        "y_ratio": 0.03,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-411B",
+      "name_zh": "411B房间",
+      "name_en": "Room 411B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "411B",
+        "411B房间",
+        "Room 411B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "411B",
+            "411B房间",
+            "Room 411B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "411B",
+      "position": {
+        "x_m": 47.46,
+        "y_m": 6.08,
+        "x_ratio": 0.678,
+        "y_ratio": 0.076,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-411A",
+      "name_zh": "411A房间",
+      "name_en": "Room 411A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "411A",
+        "411A房间",
+        "Room 411A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "411A",
+            "411A房间",
+            "Room 411A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "411A",
+      "position": {
+        "x_m": 47.46,
+        "y_m": 9.6,
+        "x_ratio": 0.678,
+        "y_ratio": 0.12,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-413A",
+      "name_zh": "413A房间",
+      "name_en": "Room 413A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "413A",
+        "413A房间",
+        "Room 413A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "413A",
+            "413A房间",
+            "Room 413A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "413A",
+      "position": {
+        "x_m": 64.05,
+        "y_m": 5.36,
+        "x_ratio": 0.915,
+        "y_ratio": 0.067,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-413B",
+      "name_zh": "413B房间",
+      "name_en": "Room 413B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "413B",
+        "413B房间",
+        "Room 413B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "413B",
+            "413B房间",
+            "Room 413B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "413B",
+      "position": {
+        "x_m": 64.05,
+        "y_m": 15.6,
+        "x_ratio": 0.915,
+        "y_ratio": 0.195,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400B",
+      "name_zh": "400B房间",
+      "name_en": "Room 400B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400B",
+        "400B房间",
+        "Room 400B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400B",
+            "400B房间",
+            "Room 400B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400B",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 7.6,
+        "x_ratio": 0.035,
+        "y_ratio": 0.095,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400C",
+      "name_zh": "400C房间",
+      "name_en": "Room 400C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400C",
+        "400C房间",
+        "Room 400C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400C",
+            "400C房间",
+            "Room 400C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400C",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 14.4,
+        "x_ratio": 0.035,
+        "y_ratio": 0.18,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400D",
+      "name_zh": "400D房间",
+      "name_en": "Room 400D",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400D",
+        "400D房间",
+        "Room 400D"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400D",
+            "400D房间",
+            "Room 400D"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400D",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 19.2,
+        "x_ratio": 0.035,
+        "y_ratio": 0.24,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400E",
+      "name_zh": "400E房间",
+      "name_en": "Room 400E",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400E",
+        "400E房间",
+        "Room 400E"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400E",
+            "400E房间",
+            "Room 400E"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400E",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 24.8,
+        "x_ratio": 0.035,
+        "y_ratio": 0.31,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400F",
+      "name_zh": "400F房间",
+      "name_en": "Room 400F",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400F",
+        "400F房间",
+        "Room 400F"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400F",
+            "400F房间",
+            "Room 400F"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400F",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 29.6,
+        "x_ratio": 0.035,
+        "y_ratio": 0.37,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400G",
+      "name_zh": "400G房间",
+      "name_en": "Room 400G",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400G",
+        "400G房间",
+        "Room 400G"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400G",
+            "400G房间",
+            "Room 400G"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400G",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 36.0,
+        "x_ratio": 0.035,
+        "y_ratio": 0.45,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-400H",
+      "name_zh": "400H房间",
+      "name_en": "Room 400H",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "400H",
+        "400H房间",
+        "Room 400H"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "400H",
+            "400H房间",
+            "Room 400H"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "400H",
+      "position": {
+        "x_m": 2.45,
+        "y_m": 40.8,
+        "x_ratio": 0.035,
+        "y_ratio": 0.51,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-459",
+      "name_zh": "459房间",
+      "name_en": "Room 459",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "459",
+        "459房间",
+        "Room 459"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "459",
+            "459房间",
+            "Room 459"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "459",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 46.8,
+        "x_ratio": 0.058,
+        "y_ratio": 0.585,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-457",
+      "name_zh": "457房间",
+      "name_en": "Room 457",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "457",
+        "457房间",
+        "Room 457"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "457",
+            "457房间",
+            "Room 457"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "457",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 51.6,
+        "x_ratio": 0.058,
+        "y_ratio": 0.645,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-455",
+      "name_zh": "455房间",
+      "name_en": "Room 455",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "455",
+        "455房间",
+        "Room 455"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "455",
+            "455房间",
+            "Room 455"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "455",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 56.24,
+        "x_ratio": 0.058,
+        "y_ratio": 0.703,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-453",
+      "name_zh": "453房间",
+      "name_en": "Room 453",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "453",
+        "453房间",
+        "Room 453"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "453",
+            "453房间",
+            "Room 453"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "453",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 60.8,
+        "x_ratio": 0.058,
+        "y_ratio": 0.76,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-451",
+      "name_zh": "451房间",
+      "name_en": "Room 451",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "451",
+        "451房间",
+        "Room 451"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "451",
+            "451房间",
+            "Room 451"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "451",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 65.6,
+        "x_ratio": 0.058,
+        "y_ratio": 0.82,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-449",
+      "name_zh": "449房间",
+      "name_en": "Room 449",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "449",
+        "449房间",
+        "Room 449"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "449",
+            "449房间",
+            "Room 449"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "449",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 70.24,
+        "x_ratio": 0.058,
+        "y_ratio": 0.878,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-447",
+      "name_zh": "447房间",
+      "name_en": "Room 447",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "447",
+        "447房间",
+        "Room 447"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "447",
+            "447房间",
+            "Room 447"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "447",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 74.56,
+        "x_ratio": 0.058,
+        "y_ratio": 0.932,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-445",
+      "name_zh": "445房间",
+      "name_en": "Room 445",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "445",
+        "445房间",
+        "Room 445"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "445",
+            "445房间",
+            "Room 445"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "445",
+      "position": {
+        "x_m": 4.06,
+        "y_m": 78.4,
+        "x_ratio": 0.058,
+        "y_ratio": 0.98,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-454",
+      "name_zh": "454房间",
+      "name_en": "Room 454",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "454",
+        "454房间",
+        "Room 454"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "454",
+            "454房间",
+            "Room 454"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "454",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 21.2,
+        "x_ratio": 0.24,
+        "y_ratio": 0.265,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-452",
+      "name_zh": "452房间",
+      "name_en": "Room 452",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "452",
+        "452房间",
+        "Room 452"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "452",
+            "452房间",
+            "Room 452"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "452",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 26.4,
+        "x_ratio": 0.24,
+        "y_ratio": 0.33,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-450",
+      "name_zh": "450房间",
+      "name_en": "Room 450",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "450",
+        "450房间",
+        "Room 450"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "450",
+            "450房间",
+            "Room 450"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "450",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 34.4,
+        "x_ratio": 0.24,
+        "y_ratio": 0.43,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-448",
+      "name_zh": "448房间",
+      "name_en": "Room 448",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "448",
+        "448房间",
+        "Room 448"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "448",
+            "448房间",
+            "Room 448"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "448",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 41.6,
+        "x_ratio": 0.24,
+        "y_ratio": 0.52,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-446",
+      "name_zh": "446房间",
+      "name_en": "Room 446",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "446",
+        "446房间",
+        "Room 446"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "446",
+            "446房间",
+            "Room 446"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "446",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 51.2,
+        "x_ratio": 0.24,
+        "y_ratio": 0.64,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-444",
+      "name_zh": "444房间",
+      "name_en": "Room 444",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "444",
+        "444房间",
+        "Room 444"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "444",
+            "444房间",
+            "Room 444"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "444",
+      "position": {
+        "x_m": 16.8,
+        "y_m": 62.0,
+        "x_ratio": 0.24,
+        "y_ratio": 0.775,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-443",
+      "name_zh": "443房间",
+      "name_en": "Room 443",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "443",
+        "443房间",
+        "Room 443"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "443",
+            "443房间",
+            "Room 443"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "443",
+      "position": {
+        "x_m": 23.8,
+        "y_m": 76.8,
+        "x_ratio": 0.34,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-402",
+      "name_zh": "402房间",
+      "name_en": "Room 402",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "402",
+        "402房间",
+        "Room 402"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "402",
+            "402房间",
+            "Room 402"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "402",
+      "position": {
+        "x_m": 24.15,
+        "y_m": 19.6,
+        "x_ratio": 0.345,
+        "y_ratio": 0.245,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-404",
+      "name_zh": "404房间",
+      "name_en": "Room 404",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "404",
+        "404房间",
+        "Room 404"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "404",
+            "404房间",
+            "Room 404"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "404",
+      "position": {
+        "x_m": 28.7,
+        "y_m": 19.6,
+        "x_ratio": 0.41,
+        "y_ratio": 0.245,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-406",
+      "name_zh": "406房间",
+      "name_en": "Room 406",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "406",
+        "406房间",
+        "Room 406"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "406",
+            "406房间",
+            "Room 406"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "406",
+      "position": {
+        "x_m": 33.25,
+        "y_m": 19.6,
+        "x_ratio": 0.475,
+        "y_ratio": 0.245,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-408",
+      "name_zh": "408房间",
+      "name_en": "Room 408",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "408",
+        "408房间",
+        "Room 408"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "408",
+            "408房间",
+            "Room 408"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "408",
+      "position": {
+        "x_m": 37.8,
+        "y_m": 19.6,
+        "x_ratio": 0.54,
+        "y_ratio": 0.245,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-410",
+      "name_zh": "410房间",
+      "name_en": "Room 410",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "410",
+        "410房间",
+        "Room 410"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "410",
+            "410房间",
+            "Room 410"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "410",
+      "position": {
+        "x_m": 43.05,
+        "y_m": 19.6,
+        "x_ratio": 0.615,
+        "y_ratio": 0.245,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-412",
+      "name_zh": "412房间",
+      "name_en": "Room 412",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "412",
+        "412房间",
+        "Room 412"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "412",
+            "412房间",
+            "Room 412"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "412",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 19.2,
+        "x_ratio": 0.735,
+        "y_ratio": 0.24,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-416",
+      "name_zh": "416房间",
+      "name_en": "Room 416",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "416",
+        "416房间",
+        "Room 416"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "416",
+            "416房间",
+            "Room 416"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "416",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 24.8,
+        "x_ratio": 0.735,
+        "y_ratio": 0.31,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-418",
+      "name_zh": "418房间",
+      "name_en": "Room 418",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "418",
+        "418房间",
+        "Room 418"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "418",
+            "418房间",
+            "Room 418"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "418",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 30.4,
+        "x_ratio": 0.735,
+        "y_ratio": 0.38,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-420",
+      "name_zh": "420房间",
+      "name_en": "Room 420",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "420",
+        "420房间",
+        "Room 420"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "420",
+            "420房间",
+            "Room 420"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "420",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 36.0,
+        "x_ratio": 0.735,
+        "y_ratio": 0.45,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-422",
+      "name_zh": "422房间",
+      "name_en": "Room 422",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "422",
+        "422房间",
+        "Room 422"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "422",
+            "422房间",
+            "Room 422"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "422",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 41.6,
+        "x_ratio": 0.735,
+        "y_ratio": 0.52,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-424",
+      "name_zh": "424房间",
+      "name_en": "Room 424",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "424",
+        "424房间",
+        "Room 424"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "424",
+            "424房间",
+            "Room 424"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "424",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 47.2,
+        "x_ratio": 0.735,
+        "y_ratio": 0.59,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-426",
+      "name_zh": "426房间",
+      "name_en": "Room 426",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "426",
+        "426房间",
+        "Room 426"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "426",
+            "426房间",
+            "Room 426"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "426",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 52.4,
+        "x_ratio": 0.735,
+        "y_ratio": 0.655,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-428",
+      "name_zh": "428房间",
+      "name_en": "Room 428",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "428",
+        "428房间",
+        "Room 428"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "428",
+            "428房间",
+            "Room 428"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "428",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 57.6,
+        "x_ratio": 0.735,
+        "y_ratio": 0.72,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-430",
+      "name_zh": "430房间",
+      "name_en": "Room 430",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "430",
+        "430房间",
+        "Room 430"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "430",
+            "430房间",
+            "Room 430"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "430",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 62.4,
+        "x_ratio": 0.735,
+        "y_ratio": 0.78,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-414A",
+      "name_zh": "414A房间",
+      "name_en": "Room 414A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "414A",
+        "414A房间",
+        "Room 414A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "414A",
+            "414A房间",
+            "Room 414A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "414A",
+      "position": {
+        "x_m": 59.15,
+        "y_m": 28.4,
+        "x_ratio": 0.845,
+        "y_ratio": 0.355,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-414B",
+      "name_zh": "414B房间",
+      "name_en": "Room 414B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "414B",
+        "414B房间",
+        "Room 414B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "414B",
+            "414B房间",
+            "Room 414B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "414B",
+      "position": {
+        "x_m": 59.15,
+        "y_m": 36.4,
+        "x_ratio": 0.845,
+        "y_ratio": 0.455,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-415B",
+      "name_zh": "415B房间",
+      "name_en": "Room 415B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "415B",
+        "415B房间",
+        "Room 415B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "415B",
+            "415B房间",
+            "Room 415B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "415B",
+      "position": {
+        "x_m": 59.15,
+        "y_m": 47.04,
+        "x_ratio": 0.845,
+        "y_ratio": 0.588,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-415A",
+      "name_zh": "415A房间",
+      "name_en": "Room 415A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "415A",
+        "415A房间",
+        "Room 415A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "415A",
+            "415A房间",
+            "Room 415A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "415A",
+      "position": {
+        "x_m": 59.15,
+        "y_m": 56.0,
+        "x_ratio": 0.845,
+        "y_ratio": 0.7,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-417",
+      "name_zh": "417房间",
+      "name_en": "Room 417",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "417",
+        "417房间",
+        "Room 417"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "417",
+            "417房间",
+            "Room 417"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "417",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 28.4,
+        "x_ratio": 0.95,
+        "y_ratio": 0.355,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-419",
+      "name_zh": "419房间",
+      "name_en": "Room 419",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "419",
+        "419房间",
+        "Room 419"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "419",
+            "419房间",
+            "Room 419"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "419",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 34.4,
+        "x_ratio": 0.95,
+        "y_ratio": 0.43,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-421",
+      "name_zh": "421房间",
+      "name_en": "Room 421",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "421",
+        "421房间",
+        "Room 421"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "421",
+            "421房间",
+            "Room 421"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "421",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 40.8,
+        "x_ratio": 0.95,
+        "y_ratio": 0.51,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-423",
+      "name_zh": "423房间",
+      "name_en": "Room 423",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "423",
+        "423房间",
+        "Room 423"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "423",
+            "423房间",
+            "Room 423"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "423",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 47.6,
+        "x_ratio": 0.95,
+        "y_ratio": 0.595,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-425",
+      "name_zh": "425房间",
+      "name_en": "Room 425",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "425",
+        "425房间",
+        "Room 425"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "425",
+            "425房间",
+            "Room 425"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "425",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 53.2,
+        "x_ratio": 0.95,
+        "y_ratio": 0.665,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-427",
+      "name_zh": "427房间",
+      "name_en": "Room 427",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "427",
+        "427房间",
+        "Room 427"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "427",
+            "427房间",
+            "Room 427"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "427",
+      "position": {
+        "x_m": 66.5,
+        "y_m": 58.4,
+        "x_ratio": 0.95,
+        "y_ratio": 0.73,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-442",
+      "name_zh": "442房间",
+      "name_en": "Room 442",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "442",
+        "442房间",
+        "Room 442"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "442",
+            "442房间",
+            "Room 442"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "442",
+      "position": {
+        "x_m": 27.3,
+        "y_m": 64.8,
+        "x_ratio": 0.39,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-440",
+      "name_zh": "440房间",
+      "name_en": "Room 440",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "440",
+        "440房间",
+        "Room 440"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "440",
+            "440房间",
+            "Room 440"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "440",
+      "position": {
+        "x_m": 32.2,
+        "y_m": 64.8,
+        "x_ratio": 0.46,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-438",
+      "name_zh": "438房间",
+      "name_en": "Room 438",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "438",
+        "438房间",
+        "Room 438"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "438",
+            "438房间",
+            "Room 438"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "438",
+      "position": {
+        "x_m": 37.1,
+        "y_m": 64.8,
+        "x_ratio": 0.53,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-436",
+      "name_zh": "436房间",
+      "name_en": "Room 436",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "436",
+        "436房间",
+        "Room 436"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "436",
+            "436房间",
+            "Room 436"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "436",
+      "position": {
+        "x_m": 41.3,
+        "y_m": 64.8,
+        "x_ratio": 0.59,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-434",
+      "name_zh": "434房间",
+      "name_en": "Room 434",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "434",
+        "434房间",
+        "Room 434"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "434",
+            "434房间",
+            "Room 434"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "434",
+      "position": {
+        "x_m": 46.2,
+        "y_m": 64.8,
+        "x_ratio": 0.66,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-432",
+      "name_zh": "432房间",
+      "name_en": "Room 432",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "432",
+        "432房间",
+        "Room 432"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "432",
+            "432房间",
+            "Room 432"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "432",
+      "position": {
+        "x_m": 51.45,
+        "y_m": 64.8,
+        "x_ratio": 0.735,
+        "y_ratio": 0.81,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-441A",
+      "name_zh": "441A房间",
+      "name_en": "Room 441A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "441A",
+        "441A房间",
+        "Room 441A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "441A",
+            "441A房间",
+            "Room 441A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "441A",
+      "position": {
+        "x_m": 28.35,
+        "y_m": 72.0,
+        "x_ratio": 0.405,
+        "y_ratio": 0.9,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-441B",
+      "name_zh": "441B房间",
+      "name_en": "Room 441B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "441B",
+        "441B房间",
+        "Room 441B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "441B",
+            "441B房间",
+            "Room 441B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "441B",
+      "position": {
+        "x_m": 28.35,
+        "y_m": 75.2,
+        "x_ratio": 0.405,
+        "y_ratio": 0.94,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-441C",
+      "name_zh": "441C房间",
+      "name_en": "Room 441C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "441C",
+        "441C房间",
+        "Room 441C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "441C",
+            "441C房间",
+            "Room 441C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "441C",
+      "position": {
+        "x_m": 28.35,
+        "y_m": 78.4,
+        "x_ratio": 0.405,
+        "y_ratio": 0.98,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-439A",
+      "name_zh": "439A房间",
+      "name_en": "Room 439A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "439A",
+        "439A房间",
+        "Room 439A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "439A",
+            "439A房间",
+            "Room 439A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "439A",
+      "position": {
+        "x_m": 33.25,
+        "y_m": 72.0,
+        "x_ratio": 0.475,
+        "y_ratio": 0.9,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-439B",
+      "name_zh": "439B房间",
+      "name_en": "Room 439B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "439B",
+        "439B房间",
+        "Room 439B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "439B",
+            "439B房间",
+            "Room 439B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "439B",
+      "position": {
+        "x_m": 33.25,
+        "y_m": 75.2,
+        "x_ratio": 0.475,
+        "y_ratio": 0.94,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-439C",
+      "name_zh": "439C房间",
+      "name_en": "Room 439C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "439C",
+        "439C房间",
+        "Room 439C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "439C",
+            "439C房间",
+            "Room 439C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "439C",
+      "position": {
+        "x_m": 33.25,
+        "y_m": 78.4,
+        "x_ratio": 0.475,
+        "y_ratio": 0.98,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-437A",
+      "name_zh": "437A房间",
+      "name_en": "Room 437A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "437A",
+        "437A房间",
+        "Room 437A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "437A",
+            "437A房间",
+            "Room 437A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "437A",
+      "position": {
+        "x_m": 38.5,
+        "y_m": 72.0,
+        "x_ratio": 0.55,
+        "y_ratio": 0.9,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-437B",
+      "name_zh": "437B房间",
+      "name_en": "Room 437B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "437B",
+        "437B房间",
+        "Room 437B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "437B",
+            "437B房间",
+            "Room 437B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "437B",
+      "position": {
+        "x_m": 38.5,
+        "y_m": 75.2,
+        "x_ratio": 0.55,
+        "y_ratio": 0.94,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-437C",
+      "name_zh": "437C房间",
+      "name_en": "Room 437C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "437C",
+        "437C房间",
+        "Room 437C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "437C",
+            "437C房间",
+            "Room 437C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "437C",
+      "position": {
+        "x_m": 38.5,
+        "y_m": 78.4,
+        "x_ratio": 0.55,
+        "y_ratio": 0.98,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-435A",
+      "name_zh": "435A房间",
+      "name_en": "Room 435A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "435A",
+        "435A房间",
+        "Room 435A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "435A",
+            "435A房间",
+            "Room 435A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "435A",
+      "position": {
+        "x_m": 43.54,
+        "y_m": 72.0,
+        "x_ratio": 0.622,
+        "y_ratio": 0.9,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-435B",
+      "name_zh": "435B房间",
+      "name_en": "Room 435B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "435B",
+        "435B房间",
+        "Room 435B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "435B",
+            "435B房间",
+            "Room 435B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "435B",
+      "position": {
+        "x_m": 43.54,
+        "y_m": 75.2,
+        "x_ratio": 0.622,
+        "y_ratio": 0.94,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-435C",
+      "name_zh": "435C房间",
+      "name_en": "Room 435C",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "435C",
+        "435C房间",
+        "Room 435C"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "435C",
+            "435C房间",
+            "Room 435C"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "435C",
+      "position": {
+        "x_m": 43.54,
+        "y_m": 78.4,
+        "x_ratio": 0.622,
+        "y_ratio": 0.98,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-433",
+      "name_zh": "433房间",
+      "name_en": "Room 433",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "433",
+        "433房间",
+        "Room 433"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "433",
+            "433房间",
+            "Room 433"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "433",
+      "position": {
+        "x_m": 50.4,
+        "y_m": 76.8,
+        "x_ratio": 0.72,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-431A",
+      "name_zh": "431A房间",
+      "name_en": "Room 431A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "431A",
+        "431A房间",
+        "Room 431A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "431A",
+            "431A房间",
+            "Room 431A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "431A",
+      "position": {
+        "x_m": 59.5,
+        "y_m": 76.8,
+        "x_ratio": 0.85,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-431B",
+      "name_zh": "431B房间",
+      "name_en": "Room 431B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "431B",
+        "431B房间",
+        "Room 431B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "431B",
+            "431B房间",
+            "Room 431B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "431B",
+      "position": {
+        "x_m": 58.94,
+        "y_m": 78.0,
+        "x_ratio": 0.842,
+        "y_ratio": 0.975,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-429A",
+      "name_zh": "429A房间",
+      "name_en": "Room 429A",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "429A",
+        "429A房间",
+        "Room 429A"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "429A",
+            "429A房间",
+            "Room 429A"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "429A",
+      "position": {
+        "x_m": 64.26,
+        "y_m": 66.8,
+        "x_ratio": 0.918,
+        "y_ratio": 0.835,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ROOM-429B",
+      "name_zh": "429B房间",
+      "name_en": "Room 429B",
+      "floor": 4,
+      "kind": "room",
+      "aliases": [
+        "429B",
+        "429B房间",
+        "Room 429B"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "429B",
+            "429B房间",
+            "Room 429B"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图识别的房间节点，具体用途和定位信息待人工填写。",
+      "room_number": "429B",
+      "position": {
+        "x_m": 64.26,
+        "y_m": 76.8,
+        "x_ratio": 0.918,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-YOU-ARE-HERE",
+      "name_zh": "您所在位置",
+      "name_en": "You are here",
+      "floor": 4,
+      "kind": "marker",
+      "aliases": [
+        "您所在位置",
+        "You are here",
+        "当前位置"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "您所在位置",
+            "You are here"
+          ],
+          "weight": 5.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 15.75,
+        "y_m": 68.0,
+        "x_ratio": 0.225,
+        "y_ratio": 0.85,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-RESTROOM-NORTHEAST",
+      "name_zh": "东北侧卫生间",
+      "name_en": "Northeast Restroom",
+      "floor": 4,
+      "kind": "restroom",
+      "aliases": [
+        "卫生间",
+        "restroom",
+        "东北卫生间",
+        "东北侧卫生间",
+        "Northeast Restroom"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "卫生间",
+            "restroom",
+            "洗手间"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 54.95,
+        "y_m": 4.0,
+        "x_ratio": 0.785,
+        "y_ratio": 0.05,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-RESTROOM-SOUTHWEST",
+      "name_zh": "西南侧卫生间",
+      "name_en": "Southwest Restroom",
+      "floor": 4,
+      "kind": "restroom",
+      "aliases": [
+        "卫生间",
+        "restroom",
+        "西南卫生间",
+        "西南侧卫生间",
+        "Southwest Restroom"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "卫生间",
+            "restroom",
+            "洗手间"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 14.35,
+        "y_m": 77.2,
+        "x_ratio": 0.205,
+        "y_ratio": 0.965,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-STAIRS-NORTHWEST",
+      "name_zh": "西北侧楼梯",
+      "name_en": "Northwest Stairs",
+      "floor": 4,
       "kind": "stairs",
-      "aliases": ["一楼楼梯"],
+      "aliases": [
+        "楼梯",
+        "stairs",
+        "西北楼梯",
+        "西北侧楼梯",
+        "Northwest Stairs"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["东侧楼梯", "east staircase", "楼梯台阶"],
-          "weight": 2
-        },
-        {
-          "aliases": ["1F楼层牌", "1F sign", "一楼标识"],
-          "weight": 4
-        },
-        {
-          "aliases": ["蓝色楼梯扶手", "blue stair handrail"],
-          "weight": 2
+          "aliases": [
+            "楼梯",
+            "stairs"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 17.64,
+        "y_m": 4.0,
+        "x_ratio": 0.252,
+        "y_ratio": 0.05,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "LB-1F-ELEVATOR",
-      "name_zh": "一楼电梯",
-      "name_en": "First-floor Elevator",
-      "floor": 1,
-      "kind": "elevator",
-      "aliases": ["一楼无障碍电梯"],
-      "visual_landmarks": [
-        {
-          "aliases": ["银色电梯门", "silver elevator doors", "电梯门"],
-          "weight": 2
-        },
-        {
-          "aliases": ["1F电梯显示屏", "elevator display 1F", "1F"],
-          "weight": 4
-        },
-        {
-          "aliases": ["电梯按钮面板", "elevator button panel"],
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "LB-2F-STAIRS-EAST",
-      "name_zh": "二楼东侧楼梯",
-      "name_en": "Second-floor East Staircase",
-      "floor": 2,
+      "id": "LB-4F-STAIRS-NORTHEAST",
+      "name_zh": "东北侧楼梯",
+      "name_en": "Northeast Stairs",
+      "floor": 4,
       "kind": "stairs",
-      "aliases": ["二楼楼梯"],
+      "aliases": [
+        "楼梯",
+        "stairs",
+        "东北楼梯",
+        "东北侧楼梯",
+        "Northeast Stairs"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["东侧楼梯", "east staircase", "楼梯出口"],
-          "weight": 2
-        },
-        {
-          "aliases": ["2F楼层牌", "2F sign", "二楼标识"],
-          "weight": 4
-        },
-        {
-          "aliases": ["蓝色楼梯扶手", "blue stair handrail"],
-          "weight": 2
+          "aliases": [
+            "楼梯",
+            "stairs"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 51.24,
+        "y_m": 4.0,
+        "x_ratio": 0.732,
+        "y_ratio": 0.05,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "LB-2F-ELEVATOR",
-      "name_zh": "二楼电梯",
-      "name_en": "Second-floor Elevator",
-      "floor": 2,
+      "id": "LB-4F-STAIRS-SOUTHWEST",
+      "name_zh": "西南侧楼梯",
+      "name_en": "Southwest Stairs",
+      "floor": 4,
+      "kind": "stairs",
+      "aliases": [
+        "楼梯",
+        "stairs",
+        "西南楼梯",
+        "西南侧楼梯",
+        "Southwest Stairs"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "楼梯",
+            "stairs"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 18.9,
+        "y_m": 76.8,
+        "x_ratio": 0.27,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-STAIRS-SOUTHEAST",
+      "name_zh": "东南侧楼梯",
+      "name_en": "Southeast Stairs",
+      "floor": 4,
+      "kind": "stairs",
+      "aliases": [
+        "楼梯",
+        "stairs",
+        "东南楼梯",
+        "东南侧楼梯",
+        "Southeast Stairs"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "楼梯",
+            "stairs"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 54.74,
+        "y_m": 76.8,
+        "x_ratio": 0.782,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-ELEVATOR-NORTHWEST",
+      "name_zh": "西北侧电梯",
+      "name_en": "Northwest Elevator",
+      "floor": 4,
       "kind": "elevator",
-      "aliases": ["二楼无障碍电梯"],
+      "aliases": [
+        "电梯",
+        "elevator",
+        "西北电梯",
+        "西北侧电梯",
+        "Northwest Elevator"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["银色电梯门", "silver elevator doors", "电梯门"],
-          "weight": 2
-        },
-        {
-          "aliases": ["2F电梯显示屏", "elevator display 2F", "2F"],
-          "weight": 4
-        },
-        {
-          "aliases": ["电梯按钮面板", "elevator button panel"],
-          "weight": 1
+          "aliases": [
+            "电梯",
+            "elevator"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 21.0,
+        "y_m": 4.4,
+        "x_ratio": 0.3,
+        "y_ratio": 0.055,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "LB-2F-CORRIDOR-A",
-      "name_zh": "二楼走廊A",
-      "name_en": "Second-floor Corridor A",
-      "floor": 2,
-      "kind": "checkpoint",
-      "aliases": ["二楼走廊", "corridor a"],
+      "id": "LB-4F-CARGO-ELEVATOR-SOUTHEAST",
+      "name_zh": "东南侧货梯",
+      "name_en": "Southeast Cargo Elevator",
+      "floor": 4,
+      "kind": "cargo_elevator",
+      "aliases": [
+        "货梯",
+        "cargo elevator",
+        "东南货梯",
+        "东南侧货梯",
+        "Southeast Cargo Elevator"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["蓝色房间门牌", "blue room signs", "房间门牌"],
-          "weight": 3
-        },
-        {
-          "aliases": ["白色长走廊", "long white corridor", "二楼走廊"],
-          "weight": 2
-        },
-        {
-          "aliases": ["连续房门", "row of room doors"],
-          "weight": 1
+          "aliases": [
+            "货梯",
+            "cargo elevator"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 58.8,
+        "y_m": 76.8,
+        "x_ratio": 0.84,
+        "y_ratio": 0.96,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     },
     {
-      "id": "EXHIBIT-ROBOT",
-      "name_zh": "机器人展品",
-      "name_en": "Robot Exhibit",
-      "floor": 2,
-      "kind": "exhibit",
-      "aliases": ["机器人", "robot exhibit"],
+      "id": "LB-4F-PANTRY-WEST",
+      "name_zh": "西侧茶水间",
+      "name_en": "West Pantry",
+      "floor": 4,
+      "kind": "pantry",
+      "aliases": [
+        "茶水间",
+        "pantry",
+        "西侧茶水间",
+        "West Pantry"
+      ],
       "visual_landmarks": [
         {
-          "aliases": ["机器人展品", "robot exhibit", "白色机器人"],
-          "weight": 5
-        },
-        {
-          "aliases": ["机器人介绍展板", "robot information board"],
-          "weight": 3
-        },
-        {
-          "aliases": ["ROBOT-001", "机器人技术示范"],
-          "weight": 4
+          "aliases": [
+            "茶水间",
+            "pantry"
+          ],
+          "weight": 4.0
         }
-      ]
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 7.0,
+        "y_m": 13.6,
+        "x_ratio": 0.1,
+        "y_ratio": 0.17,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-PANTRY-NORTHEAST",
+      "name_zh": "东北侧茶水间",
+      "name_en": "Northeast Pantry",
+      "floor": 4,
+      "kind": "pantry",
+      "aliases": [
+        "茶水间",
+        "pantry",
+        "东北茶水间",
+        "东北侧茶水间",
+        "Northeast Pantry"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "茶水间",
+            "pantry"
+          ],
+          "weight": 4.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 56.0,
+        "y_m": 11.2,
+        "x_ratio": 0.8,
+        "y_ratio": 0.14,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-WEST-1",
+      "name_zh": "西侧消防栓1",
+      "name_en": "West Fire Hydrant 1",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "西侧消防栓",
+        "西侧消防栓1",
+        "West Fire Hydrant 1"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 9.1,
+        "y_m": 23.2,
+        "x_ratio": 0.13,
+        "y_ratio": 0.29,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-WEST-2",
+      "name_zh": "西侧消防栓2",
+      "name_en": "West Fire Hydrant 2",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "西侧消防栓",
+        "西侧消防栓2",
+        "West Fire Hydrant 2"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 9.1,
+        "y_m": 42.4,
+        "x_ratio": 0.13,
+        "y_ratio": 0.53,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-WEST-3",
+      "name_zh": "西侧消防栓3",
+      "name_en": "West Fire Hydrant 3",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "西侧消防栓",
+        "西侧消防栓3",
+        "West Fire Hydrant 3"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 9.1,
+        "y_m": 62.4,
+        "x_ratio": 0.13,
+        "y_ratio": 0.78,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-WEST-4",
+      "name_zh": "西侧消防栓4",
+      "name_en": "West Fire Hydrant 4",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "西侧消防栓",
+        "西侧消防栓4",
+        "West Fire Hydrant 4"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 10.15,
+        "y_m": 69.6,
+        "x_ratio": 0.145,
+        "y_ratio": 0.87,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-CENTER-NORTH-1",
+      "name_zh": "中北侧消防栓1",
+      "name_en": "North-Central Fire Hydrant 1",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "中北消防栓",
+        "中北侧消防栓1",
+        "North-Central Fire Hydrant 1"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 21.7,
+        "y_m": 16.0,
+        "x_ratio": 0.31,
+        "y_ratio": 0.2,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-CENTER-NORTH-2",
+      "name_zh": "中北侧消防栓2",
+      "name_en": "North-Central Fire Hydrant 2",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "中北消防栓",
+        "中北侧消防栓2",
+        "North-Central Fire Hydrant 2"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 39.2,
+        "y_m": 14.4,
+        "x_ratio": 0.56,
+        "y_ratio": 0.18,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-NORTHEAST",
+      "name_zh": "东北侧消防栓",
+      "name_en": "Northeast Fire Hydrant",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "东北消防栓",
+        "东北侧消防栓",
+        "Northeast Fire Hydrant"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 49.0,
+        "y_m": 12.0,
+        "x_ratio": 0.7,
+        "y_ratio": 0.15,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-EAST-1",
+      "name_zh": "东侧消防栓1",
+      "name_en": "East Fire Hydrant 1",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "东侧消防栓",
+        "东侧消防栓1",
+        "East Fire Hydrant 1"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 63.7,
+        "y_m": 24.0,
+        "x_ratio": 0.91,
+        "y_ratio": 0.3,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-EAST-2",
+      "name_zh": "东侧消防栓2",
+      "name_en": "East Fire Hydrant 2",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "东侧消防栓",
+        "东侧消防栓2",
+        "East Fire Hydrant 2"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 53.9,
+        "y_m": 47.2,
+        "x_ratio": 0.77,
+        "y_ratio": 0.59,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-EAST-3",
+      "name_zh": "东侧消防栓3",
+      "name_en": "East Fire Hydrant 3",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "东侧消防栓",
+        "东侧消防栓3",
+        "East Fire Hydrant 3"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 63.7,
+        "y_m": 61.6,
+        "x_ratio": 0.91,
+        "y_ratio": 0.77,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-SOUTH-1",
+      "name_zh": "南侧消防栓1",
+      "name_en": "South Fire Hydrant 1",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "南侧消防栓",
+        "南侧消防栓1",
+        "South Fire Hydrant 1"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 35.0,
+        "y_m": 69.6,
+        "x_ratio": 0.5,
+        "y_ratio": 0.87,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
+    },
+    {
+      "id": "LB-4F-FIRE-HYDRANT-SOUTH-2",
+      "name_zh": "南侧消防栓2",
+      "name_en": "South Fire Hydrant 2",
+      "floor": 4,
+      "kind": "fire_hydrant",
+      "aliases": [
+        "消防栓",
+        "fire hydrant",
+        "南侧消防栓",
+        "南侧消防栓2",
+        "South Fire Hydrant 2"
+      ],
+      "visual_landmarks": [
+        {
+          "aliases": [
+            "消防栓",
+            "fire hydrant"
+          ],
+          "weight": 3.0
+        }
+      ],
+      "remark": "从4楼楼层索引图图例识别的设施节点，坐标按图片位置估算。",
+      "position": {
+        "x_m": 47.6,
+        "y_m": 72.8,
+        "x_ratio": 0.68,
+        "y_ratio": 0.91,
+        "estimated": true
+      },
+      "source": "龙宾楼4楼楼层索引图"
     }
   ],
-  "edges": [
-    {
-      "from": "LB-1F-ENTRANCE",
-      "to": "LB-1F-LOBBY",
-      "distance_m": 12,
-      "bidirectional": true,
-      "accessible": true,
-      "instructions": {
-        "forward": {
-          "zh": "从主入口直行约12米，进入一楼大厅。",
-          "en": "Go straight for about 12 meters from the main entrance into the lobby."
-        },
-        "reverse": {
-          "zh": "穿过大厅直行约12米，到达主入口。",
-          "en": "Cross the lobby and continue for about 12 meters to the main entrance."
-        }
-      }
-    },
-    {
-      "from": "LB-1F-LOBBY",
-      "to": "LB-1F-STAIRS-EAST",
-      "distance_m": 8,
-      "bidirectional": true,
-      "accessible": false,
-      "instructions": {
-        "forward": {
-          "zh": "在大厅向左转，前进约8米到达东侧楼梯。",
-          "en": "Turn left in the lobby and continue for about 8 meters to the east staircase."
-        },
-        "reverse": {
-          "zh": "离开楼梯后前进约8米，回到一楼大厅。",
-          "en": "Leave the staircase and continue for about 8 meters back to the lobby."
-        }
-      }
-    },
-    {
-      "from": "LB-1F-STAIRS-EAST",
-      "to": "LB-2F-STAIRS-EAST",
-      "distance_m": 15,
-      "bidirectional": true,
-      "accessible": false,
-      "instructions": {
-        "forward": {
-          "zh": "沿楼梯上到二楼，在楼梯出口扫描下一个二维码。",
-          "en": "Take the stairs to the second floor and scan the next QR code at the exit."
-        },
-        "reverse": {
-          "zh": "沿楼梯下到一楼。",
-          "en": "Take the stairs down to the first floor."
-        }
-      }
-    },
-    {
-      "from": "LB-1F-LOBBY",
-      "to": "LB-1F-ELEVATOR",
-      "distance_m": 14,
-      "bidirectional": true,
-      "accessible": true,
-      "instructions": {
-        "forward": {
-          "zh": "穿过大厅前进约14米，到达一楼电梯。",
-          "en": "Cross the lobby for about 14 meters to reach the elevator."
-        },
-        "reverse": {
-          "zh": "离开电梯后前进约14米，回到大厅。",
-          "en": "Leave the elevator and continue for about 14 meters back to the lobby."
-        }
-      }
-    },
-    {
-      "from": "LB-1F-ELEVATOR",
-      "to": "LB-2F-ELEVATOR",
-      "distance_m": 10,
-      "bidirectional": true,
-      "accessible": true,
-      "instructions": {
-        "forward": {
-          "zh": "乘电梯到二楼，出门后扫描电梯旁的二维码。",
-          "en": "Take the elevator to the second floor and scan the QR code beside the elevator."
-        },
-        "reverse": {
-          "zh": "乘电梯到一楼。",
-          "en": "Take the elevator to the first floor."
-        }
-      }
-    },
-    {
-      "from": "LB-2F-STAIRS-EAST",
-      "to": "LB-2F-CORRIDOR-A",
-      "distance_m": 6,
-      "bidirectional": true,
-      "accessible": false,
-      "instructions": {
-        "forward": {
-          "zh": "离开楼梯后向右转，前进约6米进入二楼走廊A。",
-          "en": "Leave the staircase, turn right, and continue for about 6 meters into Corridor A."
-        },
-        "reverse": {
-          "zh": "沿走廊前进约6米，到达东侧楼梯。",
-          "en": "Continue along the corridor for about 6 meters to the east staircase."
-        }
-      }
-    },
-    {
-      "from": "LB-2F-ELEVATOR",
-      "to": "LB-2F-CORRIDOR-A",
-      "distance_m": 7,
-      "bidirectional": true,
-      "accessible": true,
-      "instructions": {
-        "forward": {
-          "zh": "出电梯后向左转，前进约7米进入二楼走廊A。",
-          "en": "Leave the elevator, turn left, and continue for about 7 meters into Corridor A."
-        },
-        "reverse": {
-          "zh": "沿走廊前进约7米，到达二楼电梯。",
-          "en": "Continue along the corridor for about 7 meters to the second-floor elevator."
-        }
-      }
-    },
-    {
-      "from": "LB-2F-CORRIDOR-A",
-      "to": "EXHIBIT-ROBOT",
-      "distance_m": 10,
-      "bidirectional": true,
-      "accessible": true,
-      "instructions": {
-        "forward": {
-          "zh": "沿走廊直行约10米，机器人展品位于右侧。",
-          "en": "Continue straight for about 10 meters. The robot exhibit is on your right."
-        },
-        "reverse": {
-          "zh": "从机器人展品向走廊入口前进约10米。",
-          "en": "Walk about 10 meters from the robot exhibit toward the corridor entrance."
-        }
-      }
-    }
-  ]
+  "edges": []
 }
