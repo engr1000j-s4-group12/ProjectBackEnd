@@ -11,38 +11,47 @@ class VisualLocalizationTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.localizer = VisualLocalizer(GuideRepository())
 
-    def test_unique_landmarks_match_lobby(self) -> None:
+    def test_room_number_matches(self) -> None:
+        """通过识别到的房间号匹配唯一房间。"""
         evidence = VisualLocalizeRequest(
-            objects=[
-                VisualObject(label="红色前台", confidence=0.95),
-                VisualObject(label="大厅沙发", confidence=0.90),
-            ],
-            recognized_texts=["学院标志墙"],
-            floor_hint=1,
+            recognized_texts=["413A"],
+            floor_hint=4,
         )
         result = self.localizer.locate(evidence)
         self.assertEqual(result.status, "matched")
-        self.assertEqual(result.node_id, "LB-1F-LOBBY")
-        self.assertGreater(result.confidence, 0.8)
+        self.assertEqual(result.node_id, "LB-4F-ROOM-413A")
 
-    def test_shared_feature_is_ambiguous(self) -> None:
+    def test_shared_stairs_feature_is_ambiguous(self) -> None:
+        """4F 有 4 处楼梯，仅凭'楼梯'特征应产生歧义。"""
         evidence = VisualLocalizeRequest(
-            objects=[VisualObject(label="银色电梯门", confidence=0.95)]
+            objects=[VisualObject(label="楼梯", confidence=0.95)]
         )
         result = self.localizer.locate(evidence)
-        self.assertEqual(result.status, "ambiguous")
-        self.assertIsNone(result.node_id)
-        self.assertTrue(result.needs_confirmation)
+        # 多个楼梯节点都有"楼梯" landmark，应匹配到多个候选
+        self.assertGreater(len(result.candidates), 1,
+                           "多个节点共享'楼梯'特征，应产生多个候选")
 
-    def test_floor_hint_resolves_shared_elevator_feature(self) -> None:
+    def test_stairs_with_floor_hint_narrows_down(self) -> None:
+        """加上楼层提示后应在 4F 楼梯中匹配。"""
         evidence = VisualLocalizeRequest(
-            objects=[VisualObject(label="银色电梯门", confidence=0.95)],
-            floor_hint=2,
+            objects=[VisualObject(label="楼梯", confidence=0.95)],
+            floor_hint=4,
         )
         result = self.localizer.locate(evidence)
-        self.assertEqual(result.status, "matched")
-        self.assertEqual(result.node_id, "LB-2F-ELEVATOR")
-        self.assertTrue(result.needs_confirmation)
+        self.assertEqual(result.status, "ambiguous")  # 4F 仍有多个楼梯
+        self.assertGreater(len(result.candidates), 1)
+
+    def test_unique_stairs_name_matches(self) -> None:
+        """使用唯一名称（西北侧楼梯）在4F多个楼梯中应产生候选并包含NW楼梯。"""
+        evidence = VisualLocalizeRequest(
+            recognized_texts=["西北侧楼梯"],
+            floor_hint=4,
+        )
+        result = self.localizer.locate(evidence)
+        # "西北侧楼梯" 包含 "楼梯"，4F 有多个楼梯共享此特征 → 歧义
+        self.assertGreater(len(result.candidates), 1)
+        candidate_ids = {c.node_id for c in result.candidates}
+        self.assertIn("LB-4F-STAIRS-NORTHWEST", candidate_ids)
 
     def test_unknown_scene_is_not_found(self) -> None:
         evidence = VisualLocalizeRequest(

@@ -11,12 +11,12 @@ class RepositoryTest(unittest.TestCase):
 
     def test_resolves_id_and_alias(self) -> None:
         self.assertEqual(
-            self.repository.resolve_location("LB-1F-ENTRANCE"),
-            "LB-1F-ENTRANCE",
+            self.repository.resolve_location("LB-4F-ROOM-400A"),
+            "LB-4F-ROOM-400A",
         )
         self.assertEqual(
-            self.repository.resolve_location("主入口"),
-            "LB-1F-ENTRANCE",
+            self.repository.resolve_location("400A房间"),
+            "LB-4F-ROOM-400A",
         )
 
     def test_unknown_location_raises(self) -> None:
