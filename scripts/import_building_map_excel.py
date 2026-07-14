@@ -63,6 +63,26 @@ def _to_float(value: Any, *, default: float | None = None) -> float | None:
         raise ValueError(f"无法解析数字：{value!r}") from exc
 
 
+def _to_bool(value: Any, *, default: bool = True) -> bool:
+    if value is None or str(value).strip() == "":
+        return default
+    text = str(value).strip().casefold()
+    if text in {"true", "1", "yes", "y", "是", "可", "可以"}:
+        return True
+    if text in {"false", "0", "no", "n", "否", "不可", "不可以"}:
+        return False
+    raise ValueError(f"无法解析布尔值：{value!r}")
+
+
+def _json_value(value: Any, *, default: Any) -> Any:
+    if value is None or str(value).strip() == "":
+        return default
+    try:
+        return json.loads(str(value).strip())
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"无法解析 JSON：{value!r}") from exc
+
+
 def _column_index(cell_ref: str) -> int:
     letters = re.sub(r"[^A-Z]", "", cell_ref.upper())
     index = 0
@@ -85,7 +105,7 @@ def _xlsx_shared_strings(archive: zipfile.ZipFile) -> list[str]:
     return strings
 
 
-def _xlsx_sheet_path(archive: zipfile.ZipFile, sheet_name: str) -> str:
+def _xlsx_sheet_path(archive: zipfile.ZipFile, sheet_name: str) -> str | None:
     workbook = ET.fromstring(archive.read("xl/workbook.xml"))
     namespace = {
         "x": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
@@ -99,7 +119,7 @@ def _xlsx_sheet_path(archive: zipfile.ZipFile, sheet_name: str) -> str:
             ]
             break
     if relationship_id is None:
-        return "xl/worksheets/sheet1.xml"
+        return None
 
     relationships = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
     rel_namespace = {
@@ -109,7 +129,7 @@ def _xlsx_sheet_path(archive: zipfile.ZipFile, sheet_name: str) -> str:
         if relationship.attrib.get("Id") == relationship_id:
             target = relationship.attrib["Target"].lstrip("/")
             return target if target.startswith("xl/") else f"xl/{target}"
-    return "xl/worksheets/sheet1.xml"
+    return None
 
 
 def _read_xlsx(path: Path, sheet_name: str) -> list[dict[str, str]]:
@@ -120,7 +140,9 @@ def _read_xlsx(path: Path, sheet_name: str) -> list[dict[str, str]]:
 
     if openpyxl is not None:
         workbook = openpyxl.load_workbook(path, data_only=True)
-        worksheet = workbook[sheet_name] if sheet_name in workbook.sheetnames else workbook[workbook.sheetnames[0]]
+        if sheet_name not in workbook.sheetnames:
+            return []
+        worksheet = workbook[sheet_name]
         rows = list(worksheet.iter_rows(values_only=True))
         if not rows:
             return []
@@ -138,7 +160,10 @@ def _read_xlsx(path: Path, sheet_name: str) -> list[dict[str, str]]:
 
     with zipfile.ZipFile(path) as archive:
         shared_strings = _xlsx_shared_strings(archive)
-        sheet_payload = archive.read(_xlsx_sheet_path(archive, sheet_name))
+        sheet_path = _xlsx_sheet_path(archive, sheet_name)
+        if sheet_path is None:
+            return []
+        sheet_payload = archive.read(sheet_path)
     root = ET.fromstring(sheet_payload)
     namespace = {"x": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
     matrix: list[list[str]] = []
@@ -188,6 +213,24 @@ def read_rows(path: Path, sheet_name: str) -> list[dict[str, str]]:
     raise ValueError("仅支持 .xlsx 或 .csv 文件")
 
 
+def _landmarks_from_row(row: dict[str, str], room_number: str) -> list[dict[str, Any]]:
+    parsed = _json_value(row.get("visual_landmarks_json"), default=None)
+    if parsed is not None:
+        if not isinstance(parsed, list):
+            raise ValueError("visual_landmarks_json 必须是数组")
+        return parsed
+
+    landmark_aliases = _split_items(row.get("visual_landmark_aliases"))
+    if not landmark_aliases and room_number:
+        landmark_aliases = [room_number, f"{room_number}房间", f"Room {room_number}"]
+    landmark_weight = _to_float(row.get("visual_landmark_weight"), default=4.0) or 4.0
+    return (
+        [{"aliases": landmark_aliases, "weight": landmark_weight}]
+        if landmark_aliases
+        else []
+    )
+
+
 def build_node(row: dict[str, str], row_number: int) -> dict[str, Any] | None:
     node_id = (row.get("id") or "").strip()
     if not node_id:
@@ -206,11 +249,6 @@ def build_node(row: dict[str, str], row_number: int) -> dict[str, Any] | None:
         if candidate and candidate not in aliases and candidate != node_id:
             aliases.append(candidate)
 
-    landmark_aliases = _split_items(row.get("visual_landmark_aliases"))
-    if not landmark_aliases and room_number:
-        landmark_aliases = [room_number, f"{room_number}房间", f"Room {room_number}"]
-    landmark_weight = _to_float(row.get("visual_landmark_weight"), default=4.0) or 4.0
-
     node: dict[str, Any] = {
         "id": node_id,
         "name_zh": name_zh,
@@ -218,11 +256,7 @@ def build_node(row: dict[str, str], row_number: int) -> dict[str, Any] | None:
         "floor": floor,
         "kind": kind,
         "aliases": aliases,
-        "visual_landmarks": (
-            [{"aliases": landmark_aliases, "weight": landmark_weight}]
-            if landmark_aliases
-            else []
-        ),
+        "visual_landmarks": _landmarks_from_row(row, room_number),
         "remark": (row.get("remark") or "").strip(),
     }
 
@@ -249,7 +283,88 @@ def build_node(row: dict[str, str], row_number: int) -> dict[str, Any] | None:
     return node
 
 
-def build_map(rows: list[dict[str, str]], output: Path) -> dict[str, Any]:
+def build_edge(
+    row: dict[str, str], row_number: int, node_ids: set[str]
+) -> dict[str, Any] | None:
+    start = (row.get("from") or "").strip()
+    end = (row.get("to") or "").strip()
+    if not start and not end:
+        return None
+    if start not in node_ids or end not in node_ids:
+        raise ValueError(f"第 {row_number} 行边引用未知节点：{start} -> {end}")
+
+    distance = _to_float(row.get("distance_m"))
+    if distance is None or distance <= 0:
+        raise ValueError(f"第 {row_number} 行边距离必须大于 0：{start} -> {end}")
+
+    edge: dict[str, Any] = {
+        "from": start,
+        "to": end,
+        "distance_m": distance,
+        "bidirectional": _to_bool(row.get("bidirectional"), default=True),
+        "accessible": _to_bool(row.get("accessible"), default=True),
+    }
+
+    instructions = _json_value(row.get("instructions_json"), default=None)
+    if instructions is None:
+        instructions = {}
+        forward = {
+            key: (row.get(f"forward_{key}") or "").strip()
+            for key in ("zh", "en")
+        }
+        reverse = {
+            key: (row.get(f"reverse_{key}") or "").strip()
+            for key in ("zh", "en")
+        }
+        forward = {key: value for key, value in forward.items() if value}
+        reverse = {key: value for key, value in reverse.items() if value}
+        if forward:
+            instructions["forward"] = forward
+        if reverse:
+            instructions["reverse"] = reverse
+    if instructions:
+        if not isinstance(instructions, dict):
+            raise ValueError(f"第 {row_number} 行 instructions_json 必须是对象")
+        edge["instructions"] = instructions
+
+    return edge
+
+
+def build_metadata(
+    metadata_rows: list[dict[str, str]], existing: dict[str, Any]
+) -> dict[str, Any]:
+    metadata: dict[str, Any] = {}
+    for row in metadata_rows:
+        key = (row.get("key") or "").strip()
+        if not key:
+            continue
+        metadata[key] = _json_value(row.get("value_json"), default=row.get("value_json"))
+
+    return {
+        "schema_version": metadata.get("schema_version", existing.get("schema_version", 1)),
+        "building": metadata.get(
+            "building",
+            existing.get(
+                "building",
+                {
+                    "id": "LONGBIN",
+                    "name_zh": "龙宾楼",
+                    "name_en": "Longbin Building",
+                },
+            ),
+        ),
+        "floor_plan": metadata.get(
+            "floor_plan", existing.get("floor_plan", DEFAULT_FLOOR_PLAN)
+        ),
+    }
+
+
+def build_map(
+    node_rows: list[dict[str, str]],
+    edge_rows: list[dict[str, str]],
+    metadata_rows: list[dict[str, str]],
+    output: Path,
+) -> dict[str, Any]:
     existing: dict[str, Any] = {}
     if output.exists():
         with output.open(encoding="utf-8") as file:
@@ -259,7 +374,7 @@ def build_map(rows: list[dict[str, str]], output: Path) -> dict[str, Any]:
 
     nodes: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for index, row in enumerate(rows, start=2):
+    for index, row in enumerate(node_rows, start=2):
         node = build_node(row, index)
         if node is None:
             continue
@@ -272,50 +387,63 @@ def build_map(rows: list[dict[str, str]], output: Path) -> dict[str, Any]:
     if not nodes:
         raise ValueError("没有可导入的节点")
 
+    edges: list[dict[str, Any]] = []
+    node_ids = {node["id"] for node in nodes}
+    for index, row in enumerate(edge_rows, start=2):
+        edge = build_edge(row, index, node_ids)
+        if edge is not None:
+            edges.append(edge)
+
+    metadata = build_metadata(metadata_rows, existing)
     return {
-        "schema_version": existing.get("schema_version", 1),
-        "building": existing.get(
-            "building",
-            {
-                "id": "LONGBIN",
-                "name_zh": "龙宾楼",
-                "name_en": "Longbin Building",
-            },
-        ),
-        "floor_plan": existing.get("floor_plan", DEFAULT_FLOOR_PLAN),
+        "schema_version": metadata["schema_version"],
+        "building": metadata["building"],
+        "floor_plan": metadata["floor_plan"],
         "nodes": nodes,
-        "edges": [],
+        "edges": edges,
     }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="将 Excel/CSV 节点表导入 data/building_map.json。"
+        description="将 Excel/CSV 地图表导入 data/building_map.json。"
     )
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--sheet", default="nodes")
+    parser.add_argument("--sheet", default="nodes", help="兼容旧参数：节点表名称。")
+    parser.add_argument("--nodes-sheet", default=None)
+    parser.add_argument("--edges-sheet", default="edges")
+    parser.add_argument("--metadata-sheet", default="metadata")
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="只解析并打印节点数量，不写入 JSON。",
+        help="只解析并打印节点和边数量，不写入 JSON。",
     )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    rows = read_rows(args.input, args.sheet)
-    data = build_map(rows, args.output)
+    nodes_sheet = args.nodes_sheet or args.sheet
+    node_rows = read_rows(args.input, nodes_sheet)
+    if args.input.suffix.lower() == ".csv":
+        edge_rows: list[dict[str, str]] = []
+        metadata_rows: list[dict[str, str]] = []
+    else:
+        edge_rows = read_rows(args.input, args.edges_sheet)
+        metadata_rows = read_rows(args.input, args.metadata_sheet)
+    data = build_map(node_rows, edge_rows, metadata_rows, args.output)
     if args.dry_run:
-        print(f"parsed_nodes={len(data['nodes'])}")
+        print(f"parsed_nodes={len(data['nodes'])} parsed_edges={len(data['edges'])}")
         return 0
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=2)
         file.write("\n")
-    print(f"wrote {len(data['nodes'])} nodes to {args.output}")
+    print(
+        f"wrote {len(data['nodes'])} nodes and {len(data['edges'])} edges to {args.output}"
+    )
     return 0
 
 

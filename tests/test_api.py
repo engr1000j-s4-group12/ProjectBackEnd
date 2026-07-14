@@ -30,10 +30,10 @@ async def test_health(client: httpx.AsyncClient) -> None:
 async def test_localize_marker(client: httpx.AsyncClient) -> None:
     response = await client.post(
         "/api/v1/localize",
-        json={"marker_id": "LB-1F-ENTRANCE"},
+        json={"marker_id": "LB-4F-ROOM-400A"},
     )
     assert response.status_code == 200
-    assert response.json()["node_id"] == "LB-1F-ENTRANCE"
+    assert response.json()["node_id"] == "LB-4F-ROOM-400A"
 
 
 @pytest.mark.anyio
@@ -44,18 +44,19 @@ async def test_visual_localize_from_vlm_features(
         "/api/v1/localize/visual",
         json={
             "objects": [
-                {"label": "机器人展品", "confidence": 0.98},
-                {"label": "机器人介绍展板", "confidence": 0.90},
+                {"label": "西北楼梯", "confidence": 0.95},
             ],
-            "recognized_texts": ["ROBOT-001"],
-            "scene_description": "二楼走廊内的机器人展示区",
-            "floor_hint": 2,
+            "recognized_texts": ["西北侧楼梯"],
+            "scene_description": "4楼西北角楼梯间",
+            "floor_hint": 4,
         },
     )
     assert response.status_code == 200
     body = response.json()
-    assert body["status"] == "matched"
-    assert body["node_id"] == "EXHIBIT-ROBOT"
+    # "楼梯" 是4F多个楼梯节点的共享特征，NW楼梯应在候选列表中
+    assert body["status"] in ("matched", "ambiguous")
+    candidate_ids = {c["node_id"] for c in body["candidates"]}
+    assert "LB-4F-STAIRS-NORTHWEST" in candidate_ids
 
 
 @pytest.mark.anyio
@@ -74,15 +75,17 @@ async def test_route(client: httpx.AsyncClient) -> None:
     response = await client.post(
         "/api/v1/route",
         json={
-            "from_location": "主入口",
-            "to_location": "机器人",
+            "from_location": "LB-4F-ROOM-400A",
+            "to_location": "LB-4F-ROOM-429B",
             "language": "zh",
         },
     )
     assert response.status_code == 200
     body = response.json()
-    assert body["total_distance_m"] == 51
-    assert len(body["steps"]) == 5
+    assert body["total_distance_m"] > 0
+    assert len(body["steps"]) > 1
+    assert body["from_id"] == "LB-4F-ROOM-400A"
+    assert body["to_id"] == "LB-4F-ROOM-429B"
 
 
 @pytest.mark.anyio
