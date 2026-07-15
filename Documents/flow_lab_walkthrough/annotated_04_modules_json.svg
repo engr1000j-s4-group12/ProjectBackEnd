@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 20 20" refX="18" refY="10" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 20 10 L 0 20 z" fill="#dc2626"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", sans-serif; fill: #111827; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 22px; fill: #475569; }
+      .label { font-size: 28px; font-weight: 800; }
+      .body { font-size: 22px; fill: #374151; }
+      .arrow { stroke: #dc2626; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .box { fill: #fff; stroke: #dc2626; stroke-width: 3; rx: 12; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">第三步：看请求经过了哪些模块</text>
+  <text x="56" y="92" class="subtitle">模块变绿表示该模块刚参与过一次请求；右侧 JSON 用来核对真实请求和响应</text>
+  <image href="flow-lab-board-json-crop.png" x="52" y="124" width="866" height="799"/>
+
+  <rect class="box" x="965" y="135" width="560" height="122"/>
+  <text x="995" y="179" class="label">模块板</text>
+  <text x="995" y="218" class="body">定位看 VisualLocalizer；路线看 Navigator。</text>
+  <text x="995" y="247" class="body">数据读取看 Repository。</text>
+  <path class="arrow" d="M 965 218 C 820 255 650 335 450 430"/>
+
+  <rect class="box" x="965" y="300" width="560" height="126"/>
+  <text x="995" y="344" class="label">JSON 标签</text>
+  <text x="995" y="383" class="body">“发送 JSON”看请求体，“响应 JSON”看返回。</text>
+  <text x="995" y="412" class="body">“路线步骤”看分段导航。</text>
+  <path class="arrow" d="M 965 365 C 850 330 805 295 710 250"/>
+
+  <rect class="box" x="965" y="465" width="560" height="126"/>
+  <text x="995" y="509" class="label">通信内容</text>
+  <text x="995" y="548" class="body">这里是排错核心：把这段 JSON 发给队友</text>
+  <text x="995" y="577" class="body">或 Codex，就能复现同一个请求。</text>
+  <path class="arrow" d="M 965 528 C 890 520 810 500 760 445"/>
+
+  <rect class="box" x="965" y="638" width="560" height="126"/>
+  <text x="995" y="682" class="label">结果摘要</text>
+  <text x="995" y="721" class="body">底部会显示定位状态、路线距离/步数</text>
+  <text x="995" y="750" class="body">和最后一次调用的接口。</text>
+  <path class="arrow" d="M 965 695 C 820 710 650 742 365 770"/>
+</svg>

@@ -75,6 +75,14 @@ uvicorn server.app.main:app --host 0.0.0.0 --port 8000 --reload
 http://127.0.0.1:8000/docs
 ```
 
+打开后端流程协作台：
+
+```text
+http://127.0.0.1:8000/flow
+```
+
+`/flow` 是一个无构建依赖的静态 Web 前端，可发送文本、视觉 JSON、图片、路线请求和展品上下文请求，并记录每个模块之间的 JSON 通信日志。
+
 运行测试：
 
 ```bash

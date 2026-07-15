@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from .errors import (
     DataValidationError,
@@ -28,6 +32,7 @@ from .vlm import VlmClient
 
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
+FLOW_LAB_DIR = Path(__file__).resolve().parent / "static" / "flow_lab"
 
 
 def create_app(repository: GuideRepository | None = None) -> FastAPI:
@@ -40,6 +45,15 @@ def create_app(repository: GuideRepository | None = None) -> FastAPI:
         description="为小智 ESP32 终端提供定位、路线规划和展品知识查询。",
         version="0.2.0",
     )
+    app.mount(
+        "/flow/static",
+        StaticFiles(directory=FLOW_LAB_DIR),
+        name="flow_lab_static",
+    )
+
+    @app.get("/flow", include_in_schema=False)
+    async def flow_lab() -> FileResponse:
+        return FileResponse(FLOW_LAB_DIR / "index.html")
 
     @app.get("/health", response_model=HealthResponse, tags=["system"])
     async def health() -> HealthResponse:

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 20 20" refX="18" refY="10" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 20 10 L 0 20 z" fill="#dc2626"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", sans-serif; fill: #111827; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 22px; fill: #475569; }
+      .label { font-size: 25px; font-weight: 800; }
+      .body { font-size: 20px; fill: #374151; }
+      .arrow { stroke: #dc2626; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .box { fill: #fff; stroke: #dc2626; stroke-width: 3; rx: 12; }
+      .num { fill: #dc2626; }
+      .num-text { fill: #fff; font-size: 22px; font-weight: 800; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">Flow Lab 总览：一页看完整个后端流程</text>
+  <text x="56" y="92" class="subtitle">左边输入，中心看模块流转，右边看 JSON；下方保留通信记录</text>
+  <image href="flow-lab-top-crop.png" x="48" y="122" width="1040" height="763"/>
+
+  <rect class="box" x="1135" y="130" width="410" height="96"/>
+  <circle class="num" cx="1164" cy="160" r="18"/><text class="num-text" x="1164" y="160">1</text>
+  <text x="1193" y="158" class="label">快捷操作栏</text>
+  <text x="1193" y="192" class="body">检查后端、加载地点、运行流程、导出日志</text>
+  <path class="arrow" d="M 1135 180 C 875 210 610 238 330 265"/>
+
+  <rect class="box" x="1135" y="255" width="410" height="104"/>
+  <circle class="num" cx="1164" cy="286" r="18"/><text class="num-text" x="1164" y="286">2</text>
+  <text x="1193" y="284" class="label">输入区</text>
+  <text x="1193" y="318" class="body">填写用户发言、起终点</text>
+  <text x="1193" y="345" class="body">以及视觉证据和照片</text>
+  <path class="arrow" d="M 1135 314 C 850 350 610 390 330 520"/>
+
+  <rect class="box" x="1135" y="390" width="410" height="116"/>
+  <circle class="num" cx="1164" cy="421" r="18"/><text class="num-text" x="1164" y="421">3</text>
+  <text x="1193" y="419" class="label">模块板</text>
+  <text x="1193" y="453" class="body">显示请求经过 FastAPI、Repository</text>
+  <text x="1193" y="480" class="body">以及导航、展品等模块</text>
+  <path class="arrow" d="M 1135 446 C 1030 446 900 448 720 475"/>
+
+  <rect class="box" x="1135" y="525" width="410" height="104"/>
+  <circle class="num" cx="1164" cy="556" r="18"/><text class="num-text" x="1164" y="556">4</text>
+  <text x="1193" y="554" class="label">JSON 检查器</text>
+  <text x="1193" y="588" class="body">对比发送 JSON、响应 JSON</text>
+  <text x="1193" y="615" class="body">以及路线步骤</text>
+  <path class="arrow" d="M 1135 578 C 1070 560 985 522 900 508"/>
+
+  <rect class="box" x="1135" y="660" width="410" height="104"/>
+  <circle class="num" cx="1164" cy="691" r="18"/><text class="num-text" x="1164" y="691">5</text>
+  <text x="1193" y="689" class="label">通信记录</text>
+  <text x="1193" y="723" class="body">每次请求都会保存，可点击回看 JSON</text>
+  <path class="arrow" d="M 1135 716 C 870 760 620 822 370 858"/>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 20 20" refX="18" refY="10" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 20 10 L 0 20 z" fill="#dc2626"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", sans-serif; fill: #111827; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 22px; fill: #475569; }
+      .label { font-size: 28px; font-weight: 800; }
+      .body { font-size: 22px; fill: #374151; }
+      .arrow { stroke: #dc2626; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .box { fill: #fff; stroke: #dc2626; stroke-width: 3; rx: 12; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">第二步：选择要发送到哪个后端模块</text>
+  <text x="56" y="92" class="subtitle">不同按钮对应不同 API；可以单步测试，也可以顶部点击“运行当前流程”串起来</text>
+  <image href="flow-lab-input-actions-crop.png" x="90" y="118" width="520" height="760"/>
+
+  <rect class="box" x="700" y="128" width="780" height="118"/>
+  <text x="730" y="172" class="label">照片上传区</text>
+  <text x="730" y="210" class="body">拖入照片或点击选择，发送图片时会走 `/api/v1/localize/image`。</text>
+  <text x="730" y="239" class="body">这个接口需要配置 VLM API Key。</text>
+  <path class="arrow" d="M 700 220 C 590 275 450 350 292 407"/>
+
+  <rect class="box" x="700" y="294" width="780" height="118"/>
+  <text x="730" y="338" class="label">文本转 JSON / 发送视觉 JSON</text>
+  <text x="730" y="376" class="body">不接终端、不接真实 VLM 时，</text>
+  <text x="730" y="405" class="body">用这两个按钮模拟“语音理解”和“视觉定位”。</text>
+  <path class="arrow" d="M 700 390 C 570 435 425 500 260 568"/>
+
+  <rect class="box" x="700" y="470" width="780" height="118"/>
+  <text x="730" y="514" class="label">发送图片 / 规划路线</text>
+  <text x="730" y="552" class="body">图片定位得到当前位置后，再用起点和目的地</text>
+  <text x="730" y="581" class="body">调用 `/api/v1/route` 生成导航步骤。</text>
+  <path class="arrow" d="M 700 560 C 575 585 430 610 268 625"/>
+
+  <rect class="box" x="700" y="646" width="780" height="118"/>
+  <text x="730" y="690" class="label">展品上下文</text>
+  <text x="730" y="728" class="body">调用 `/api/v1/exhibits/{id}/context`，</text>
+  <text x="730" y="757" class="body">查看后端提供给讲解/RAG 的 facts。</text>
+  <path class="arrow" d="M 700 735 C 555 700 410 640 263 685"/>
+</svg>

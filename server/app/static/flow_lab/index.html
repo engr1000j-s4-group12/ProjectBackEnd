@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Longbin Flow Lab</title>
+    <link rel="stylesheet" href="/flow/static/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">LB</span>
+          <div>
+            <strong>Flow Lab</strong>
+            <span>龙宾楼导览后端协作台</span>
+          </div>
+        </div>
+        <nav class="nav-list" aria-label="页面导航">
+          <a href="#inputs">输入</a>
+          <a href="#flow">流程</a>
+          <a href="#json">JSON</a>
+          <a href="#logs">通信记录</a>
+        </nav>
+        <div class="sidebar-note">
+          <strong>模板参考</strong>
+          <span>布局参考 Tabler dashboard；本页为无构建依赖的本地静态实现。</span>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Backend workflow inspector</p>
+            <h1>后端调用流程可视化测试台</h1>
+          </div>
+          <div class="status-cluster">
+            <span id="healthBadge" class="status status-muted">health: 未检查</span>
+            <span id="placesBadge" class="status status-muted">places: 未加载</span>
+          </div>
+        </header>
+
+        <section class="toolbar" aria-label="快捷操作">
+          <button id="checkHealth" class="button primary" type="button">检查后端</button>
+          <button id="loadPlaces" class="button" type="button">加载地点</button>
+          <button id="runScenario" class="button" type="button">运行当前流程</button>
+          <button id="exportLogs" class="button" type="button">导出日志</button>
+          <button id="clearLogs" class="button danger" type="button">清空日志</button>
+        </section>
+
+        <section class="grid">
+          <form id="inputs" class="panel input-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Terminal input</p>
+                <h2>文本、照片和任务参数</h2>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>用户发言</span>
+              <textarea id="utterance" rows="4" placeholder="例如：我现在在413A附近，想去429B，帮我规划路线。"></textarea>
+            </label>
+
+            <div class="two-col">
+              <label class="field">
+                <span>当前位置 / 起点</span>
+                <input id="fromLocation" list="placeOptions" value="LB-4F-ROOM-400A" />
+              </label>
+              <label class="field">
+                <span>目的地</span>
+                <input id="toLocation" list="placeOptions" value="LB-4F-ROOM-429B" />
+              </label>
+            </div>
+
+            <div class="two-col">
+              <label class="field">
+                <span>楼层提示</span>
+                <input id="floorHint" type="number" value="4" min="1" />
+              </label>
+              <label class="field">
+                <span>导航语言</span>
+                <select id="language">
+                  <option value="zh">中文</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="check-row">
+              <input id="accessibleOnly" type="checkbox" />
+              <span>只使用无障碍路线</span>
+            </label>
+
+            <label class="field">
+              <span>识别文字，每行一个</span>
+              <textarea id="recognizedTexts" rows="3" placeholder="413A&#10;西北侧楼梯"></textarea>
+            </label>
+
+            <label class="field">
+              <span>识别物体，每行一个，可写 label:confidence</span>
+              <textarea id="objects" rows="3" placeholder="413A:0.98&#10;消防栓:0.7"></textarea>
+            </label>
+
+            <label class="field">
+              <span>场景描述</span>
+              <input id="sceneDescription" placeholder="例如：走廊右侧可见房间号和消防栓" />
+            </label>
+
+            <div id="dropZone" class="drop-zone">
+              <input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp" />
+              <div>
+                <strong>放置照片或点击选择</strong>
+                <span id="imageMeta">支持 JPEG / PNG / WebP，后端限制 5 MiB</span>
+              </div>
+            </div>
+            <img id="imagePreview" class="preview hidden" alt="上传图片预览" />
+
+            <div class="two-col">
+              <label class="field">
+                <span>展品 ID</span>
+                <input id="exhibitId" value="ROBOT-001" />
+              </label>
+              <label class="field">
+                <span>展品问题</span>
+                <input id="question" value="这个展品在哪里？" />
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button id="buildIntent" class="button" type="button">文本转 JSON</button>
+              <button id="sendVisual" class="button" type="button">发送视觉 JSON</button>
+              <button id="sendImage" class="button" type="button">发送图片</button>
+              <button id="sendRoute" class="button" type="button">规划路线</button>
+              <button id="sendContext" class="button" type="button">展品上下文</button>
+            </div>
+          </form>
+
+          <section id="flow" class="panel flow-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Module board</p>
+                <h2>模块调用和数据流</h2>
+              </div>
+              <span id="currentLocation" class="status status-muted">current: 未定位</span>
+            </div>
+
+            <div class="flow-board">
+              <article class="module-card" data-node="terminal">
+                <span class="node-index">1</span>
+                <h3>Terminal</h3>
+                <p>文本、图片、用户目标</p>
+                <code>utterance/image</code>
+              </article>
+              <article class="module-card" data-node="api">
+                <span class="node-index">2</span>
+                <h3>FastAPI</h3>
+                <p>请求校验和路由分发</p>
+                <code>main.py</code>
+              </article>
+              <article class="module-card" data-node="vlm">
+                <span class="node-index">3</span>
+                <h3>VLM Adapter</h3>
+                <p>图片转结构化视觉证据</p>
+                <code>vlm.py</code>
+              </article>
+              <article class="module-card" data-node="localizer">
+                <span class="node-index">4</span>
+                <h3>VisualLocalizer</h3>
+                <p>视觉地标评分定位</p>
+                <code>visual_localization.py</code>
+              </article>
+              <article class="module-card" data-node="repository">
+                <span class="node-index">5</span>
+                <h3>Repository</h3>
+                <p>JSON 数据和别名索引</p>
+                <code>repository.py</code>
+              </article>
+              <article class="module-card" data-node="navigator">
+                <span class="node-index">6</span>
+                <h3>Navigator</h3>
+                <p>Dijkstra 路线规划</p>
+                <code>navigation.py</code>
+              </article>
+              <article class="module-card" data-node="exhibit">
+                <span class="node-index">7</span>
+                <h3>Exhibit Context</h3>
+                <p>展品 facts 和回答约束</p>
+                <code>exhibits.json</code>
+              </article>
+              <article class="module-card" data-node="response">
+                <span class="node-index">8</span>
+                <h3>Response</h3>
+                <p>返回给终端或 Codex 的结果</p>
+                <code>JSON</code>
+              </article>
+            </div>
+
+            <div class="result-strip">
+              <div>
+                <span>定位状态</span>
+                <strong id="localizeSummary">暂无</strong>
+              </div>
+              <div>
+                <span>路线结果</span>
+                <strong id="routeSummary">暂无</strong>
+              </div>
+              <div>
+                <span>最后接口</span>
+                <strong id="lastEndpoint">暂无</strong>
+              </div>
+            </div>
+          </section>
+
+          <section id="json" class="panel inspector-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">JSON inspector</p>
+                <h2>当前通信内容</h2>
+              </div>
+            </div>
+            <div class="inspector-tabs">
+              <button class="tab active" data-tab="payload" type="button">发送 JSON</button>
+              <button class="tab" data-tab="response" type="button">响应 JSON</button>
+              <button class="tab" data-tab="route" type="button">路线步骤</button>
+            </div>
+            <pre id="payloadView" class="code-view"></pre>
+            <pre id="responseView" class="code-view hidden"></pre>
+            <ol id="routeSteps" class="route-steps hidden"></ol>
+          </section>
+        </section>
+
+        <section id="logs" class="panel logs-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Communication history</p>
+              <h2>所有通信记录</h2>
+            </div>
+            <span id="logCount" class="status status-muted">0 条</span>
+          </div>
+          <div id="logList" class="log-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <datalist id="placeOptions"></datalist>
+    <script src="/flow/static/app.js"></script>
+  </body>
+</html>

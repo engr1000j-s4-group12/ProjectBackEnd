@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", sans-serif; fill: #111827; }
+      .title { font-size: 34px; font-weight: 700; }
+      .sub { font-size: 19px; fill: #4b5563; }
+      .head { font-size: 22px; font-weight: 700; }
+      .body { font-size: 17px; fill: #374151; }
+      .small { font-size: 15px; fill: #6b7280; }
+      .line { stroke: #1f2937; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1280" height="720" fill="#f8fafc"/>
+  <text x="56" y="64" class="title">路线规划工作流程</text>
+  <text x="56" y="98" class="sub">路线规划只依赖本地地图图结构；不需要 VLM 或外部数据库</text>
+
+  <rect x="60" y="184" width="205" height="170" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="98" y="224" class="head">1 请求路线</text>
+  <text x="91" y="266" class="body">from_location</text>
+  <text x="91" y="296" class="body">to_location</text>
+  <text x="91" y="326" class="small">language / accessible_only</text>
+
+  <rect x="340" y="184" width="205" height="170" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="375" y="224" class="head">2 解析地点</text>
+  <text x="371" y="266" class="body">repository.py</text>
+  <text x="371" y="296" class="body">别名索引</text>
+  <text x="371" y="326" class="small">房间号 / 中文名 / ID</text>
+
+  <rect x="620" y="184" width="205" height="170" rx="14" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+  <text x="659" y="224" class="head">3 构建图</text>
+  <text x="652" y="266" class="body">nodes + edges</text>
+  <text x="652" y="296" class="body">过滤无障碍边</text>
+  <text x="652" y="326" class="small">accessible_only=true</text>
+
+  <rect x="900" y="184" width="220" height="170" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="946" y="224" class="head">4 最短路</text>
+  <text x="945" y="266" class="body">navigation.py</text>
+  <text x="945" y="296" class="body">Dijkstra</text>
+  <text x="945" y="326" class="small">距离作为权重</text>
+
+  <rect x="338" y="500" width="610" height="110" rx="14" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+  <text x="402" y="540" class="head">5 返回可播报导航步骤</text>
+  <text x="402" y="573" class="body">total_distance_m + steps[from_id, to_id, distance_m, instruction]</text>
+
+  <path d="M 265 269 L 340 269" class="line"/>
+  <path d="M 545 269 L 620 269" class="line"/>
+  <path d="M 825 269 L 900 269" class="line"/>
+  <path d="M 1010 354 C 1000 450 850 508 948 555" class="line"/>
+  <path d="M 642 500 C 545 442 448 420 442 354" class="line"/>
+
+  <text x="62" y="430" class="small">调用接口：POST /api/v1/route</text>
+  <text x="62" y="460" class="small">未知地点返回 404；不存在满足条件的路线返回 422</text>
+</svg>

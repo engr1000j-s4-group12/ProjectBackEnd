@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", sans-serif; fill: #111827; }
+      .title { font-size: 34px; font-weight: 700; }
+      .sub { font-size: 19px; fill: #4b5563; }
+      .head { font-size: 22px; font-weight: 700; }
+      .body { font-size: 17px; fill: #374151; }
+      .small { font-size: 15px; fill: #6b7280; }
+      .line { stroke: #1f2937; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1280" height="720" fill="#f8fafc"/>
+  <text x="56" y="64" class="title">地图数据维护与烧录流程</text>
+  <text x="56" y="98" class="sub">人工维护 Excel，脚本生成 JSON，后端启动时校验，测试通过后再给设备使用</text>
+
+  <rect x="65" y="180" width="205" height="155" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="104" y="220" class="head">1 现场资料</text>
+  <text x="100" y="262" class="body">楼层图</text>
+  <text x="100" y="292" class="body">房间号</text>
+  <text x="100" y="322" class="small">距离 / 地标 / 备注</text>
+
+  <rect x="340" y="180" width="210" height="155" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="377" y="220" class="head">2 Excel 表</text>
+  <text x="374" y="262" class="body">nodes</text>
+  <text x="374" y="292" class="body">edges</text>
+  <text x="374" y="322" class="small">metadata</text>
+
+  <rect x="620" y="180" width="230" height="155" rx="14" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+  <text x="666" y="220" class="head">3 导入脚本</text>
+  <text x="652" y="262" class="body">import_building_map_excel.py</text>
+  <text x="652" y="292" class="body">解析节点和边</text>
+  <text x="652" y="322" class="small">支持 dry-run</text>
+
+  <rect x="920" y="180" width="240" height="155" rx="14" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+  <text x="965" y="220" class="head">4 JSON 主数据</text>
+  <text x="956" y="262" class="body">building_map.json</text>
+  <text x="956" y="292" class="body">exhibits.json</text>
+  <text x="956" y="322" class="small">Git 可追踪</text>
+
+  <rect x="235" y="500" width="245" height="115" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="282" y="540" class="head">5 启动校验</text>
+  <text x="270" y="573" class="body">repository.py 检查字段、边引用、展品位置</text>
+
+  <rect x="560" y="500" width="245" height="115" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="603" y="540" class="head">6 自动测试</text>
+  <text x="595" y="573" class="body">pytest + verify_api.py</text>
+
+  <rect x="885" y="500" width="250" height="115" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="928" y="540" class="head">7 后端服务</text>
+  <text x="922" y="573" class="body">可供终端调用的稳定地图</text>
+
+  <path d="M 270 258 L 340 258" class="line"/>
+  <path d="M 550 258 L 620 258" class="line"/>
+  <path d="M 850 258 L 920 258" class="line"/>
+  <path d="M 1040 335 C 975 460 585 455 480 557" class="line"/>
+  <path d="M 480 557 L 560 557" class="line"/>
+  <path d="M 805 557 L 885 557" class="line"/>
+
+  <text x="70" y="420" class="small">导出：python3 scripts/export_building_map_excel.py</text>
+  <text x="70" y="450" class="small">导入：python3 scripts/import_building_map_excel.py --input data/building_map_nodes.xlsx --output data/building_map.json</text>
+</svg>
