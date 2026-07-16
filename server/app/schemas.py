@@ -16,7 +16,7 @@ class LocalizeRequest(BaseModel):
     marker_id: str = Field(
         min_length=1,
         examples=["LB-1F-ENTRANCE"],
-        description="二维码中保存的地点 ID，也支持地点别名",
+        description="Location ID stored in the QR code; place aliases are also supported",
     )
 
 
@@ -96,17 +96,17 @@ class RouteResponse(BaseModel):
     from_id: str
     to_id: str
     total_distance_m: float
-    announcement: str
+    announcement: str = ""
     steps: list[RouteStepResponse]
 
 
 class ExhibitQuestionRequest(BaseModel):
-    question: str = Field(min_length=1, examples=["这个展品有什么意义？"])
+    question: str = Field(min_length=1, examples=["What is the significance of this exhibit?"])
     language: Language = "zh"
 
 
 class ExhibitResolveContextRequest(VisualLocalizeRequest):
-    question: str = Field(min_length=1, examples=["介绍一下这个展品"])
+    question: str = Field(min_length=1, examples=["Please give a brief introduction to this exhibit"])
     language: Language = "zh"
 
 
@@ -114,7 +114,7 @@ class ExhibitContextResponse(BaseModel):
     exhibit_id: str
     location_id: str
     name: str
-    summary: str
+    summary: str = ""
     facts: list[str]
     question: str
     system_instruction: str
@@ -188,3 +188,28 @@ class DeviceRouteRequest(BaseModel):
     to_location: str = Field(min_length=1)
     language: Language = "zh"
     accessible_only: bool = False
+
+
+class VisitorProfile(BaseModel):
+    user_type: str | None = Field(default=None, examples=["student"])
+    age_group: str | None = Field(default=None, examples=["child"])
+    preferences: list[str] = Field(default_factory=list, examples=[["interactive", "short route"]])
+    accessibility_needs: list[str] = Field(default_factory=list, examples=[["wheelchair"]])
+
+
+class GuideFlowRequest(BaseModel):
+    destination: str = Field(min_length=1, examples=["ROBOT-001", "400A"])
+    question: str | None = Field(default=None, examples=["How do I get there? Can you introduce it after arrival?"])
+    language: Language = "zh"
+    accessible_only: bool = False
+    current_location: str | None = Field(default=None, examples=["LB-4F-ROOM-400A"])
+    visitor_profile: VisitorProfile = Field(default_factory=VisitorProfile)
+
+
+class GuideFlowResponse(BaseModel):
+    localization: VisualLocalizationResponse
+    resolved_destination_id: str
+    destination_type: Literal["location", "exhibit"]
+    route: RouteResponse | None
+    exhibit_context: ExhibitContextResponse | None
+    reply: str

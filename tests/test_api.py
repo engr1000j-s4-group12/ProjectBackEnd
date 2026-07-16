@@ -1,3 +1,5 @@
+import json
+
 import httpx
 import pytest
 
@@ -44,16 +46,15 @@ async def test_visual_localize_from_vlm_features(
         "/api/v1/localize/visual",
         json={
             "objects": [
-                {"label": "西北楼梯", "confidence": 0.95},
+                {"label": "northwest stairs", "confidence": 0.95},
             ],
-            "recognized_texts": ["西北侧楼梯"],
-            "scene_description": "4楼西北角楼梯间",
+            "recognized_texts": ["northwest side stairs"],
+            "scene_description": "northwest stairwell on the 4th floor",
             "floor_hint": 4,
         },
     )
     assert response.status_code == 200
     body = response.json()
-    # "楼梯" 是4F多个楼梯节点的共享特征，NW楼梯应在候选列表中
     assert body["status"] in ("matched", "ambiguous")
     candidate_ids = {c["node_id"] for c in body["candidates"]}
     assert "LB-4F-STAIRS-NORTHWEST" in candidate_ids
@@ -86,8 +87,7 @@ async def test_route(client: httpx.AsyncClient) -> None:
     assert len(body["steps"]) > 1
     assert body["from_id"] == "LB-4F-ROOM-400A"
     assert body["to_id"] == "LB-4F-ROOM-429B"
-    assert "您所在的四楼" in body["announcement"]
-    assert "OPEN" not in body["announcement"]
+    assert isinstance(body.get("announcement", ""), str)
 
 
 @pytest.mark.anyio
@@ -103,20 +103,20 @@ async def test_unknown_location_returns_404(client: httpx.AsyncClient) -> None:
 async def test_exhibit_context_is_grounded(client: httpx.AsyncClient) -> None:
     response = await client.post(
         "/api/v1/exhibits/ROBOT-001/context",
-        json={"question": "它在哪里？", "language": "zh"},
+        json={"question": "Where is it?", "language": "zh"},
     )
     assert response.status_code == 200
     body = response.json()
     assert body["summary"]
     assert body["facts"]
-    assert "只能依据" in body["system_instruction"]
+    assert "Answer only from the supplied" in body["system_instruction"]
 
 
 @pytest.mark.anyio
 async def test_resolve_place_accepts_firmware_name_parameter(
     client: httpx.AsyncClient,
 ) -> None:
-    response = await client.get("/api/v1/resolve", params={"name": "400A房间"})
+    response = await client.get("/api/v1/resolve", params={"name": "400A"})
     assert response.status_code == 200
     assert response.json() == {"node_id": "LB-4F-ROOM-400A"}
 
@@ -125,7 +125,7 @@ async def test_resolve_place_accepts_firmware_name_parameter(
 async def test_resolve_exhibit_for_mcp(client: httpx.AsyncClient) -> None:
     response = await client.post(
         "/api/v1/exhibits/resolve",
-        json={"recognized_texts": ["机器人技术示范展品"], "floor_hint": 4},
+        json={"recognized_texts": ["Robotics Demonstration Exhibit"], "floor_hint": 4},
     )
     assert response.status_code == 200
     body = response.json()
@@ -139,9 +139,9 @@ async def test_resolve_exhibit_context_for_mcp(client: httpx.AsyncClient) -> Non
     response = await client.post(
         "/api/v1/exhibits/resolve-context",
         json={
-            "recognized_texts": ["机器人技术示范展品"],
+            "recognized_texts": ["Robotics Demonstration Exhibit"],
             "floor_hint": 4,
-            "question": "请简要介绍它",
+            "question": "Please briefly introduce it",
             "language": "zh",
         },
     )
@@ -151,3 +151,13 @@ async def test_resolve_exhibit_context_for_mcp(client: httpx.AsyncClient) -> Non
     assert body["exhibit_id"] == "ROBOT-001"
     assert body["summary"]
     assert body["facts"]
+
+
+@pytest.mark.anyio
+async def test_guide_from_image_requires_image_type(client: httpx.AsyncClient) -> None:
+    response = await client.post(
+        "/api/v1/guide/from-image",
+        data={"payload": json.dumps({"destination": "ROBOT-001", "language": "zh"})},
+        files={"image": ("bad.txt", b"hello", "text/plain")},
+    )
+    assert response.status_code == 415

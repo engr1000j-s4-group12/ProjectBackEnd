@@ -27,11 +27,14 @@ from .schemas import (
     ExhibitResolveContextRequest,
     ExhibitResolveContextResponse,
     ExhibitResolveResponse,
+    GuideFlowRequest,
+    GuideFlowResponse,
     HealthResponse,
     LocalizeRequest,
     LocationResponse,
     RouteRequest,
     RouteResponse,
+    VisualCandidateResponse,
     VisualLocalizeRequest,
     VisualLocalizationResponse,
 )
@@ -58,8 +61,8 @@ def create_app(
     upload_dir = Path(os.getenv("GUIDE_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
     upload_dir.mkdir(parents=True, exist_ok=True)
     app = FastAPI(
-        title="龙宾楼智能导览后端",
-        description="为小智 ESP32 终端提供定位、路线规划和展品知识查询。",
+        title="Longbin Building Smart Guide Backend",
+        description="Provides localization, route planning, and exhibit knowledge services for the XiaoZhi ESP32 terminal.",
         version="1.0.0",
     )
     app.add_middleware(AccessControlMiddleware)
@@ -83,6 +86,66 @@ def create_app(
     app.include_router(
         build_device_router(store, repo, navigator, visual_localizer, vlm_client)
     )
+
+    def build_exhibit_context(
+        exhibit_id: str,
+        question: str,
+        language: str,
+    ) -> ExhibitContextResponse:
+        exhibit = repo.get_exhibit(exhibit_id)
+        suffix = "en" if language == "en" else "zh"
+        instruction = (
+            "Answer only from the supplied facts. If the facts are insufficient, say that the curated exhibit data does not contain the answer."
+            if language == "en"
+            else "Answer only from the supplied exhibit facts. If the information is insufficient, clearly state that the curated exhibit data does not contain the answer."
+        )
+        return ExhibitContextResponse(
+            exhibit_id=exhibit["id"],
+            location_id=exhibit["location_id"],
+            name=exhibit[f"name_{suffix}"],
+            summary=exhibit[f"summary_{suffix}"],
+            facts=exhibit[f"facts_{suffix}"],
+            question=question,
+            system_instruction=instruction,
+        )
+
+    def build_personalized_reply(
+        request: GuideFlowRequest,
+        localization: VisualLocalizationResponse,
+        route: RouteResponse | None,
+        exhibit_context: ExhibitContextResponse | None,
+        destination_label: str,
+    ) -> str:
+        profile = request.visitor_profile
+        audience_bits = [bit for bit in [profile.user_type, profile.age_group] if bit]
+        profile_prefix = f"For this visitor ({', '.join(audience_bits)}), " if audience_bits else ""
+
+        if localization.status == "not_found":
+            return "I cannot reliably determine the current location yet. Please upload a clearer photo showing a room number or a strong landmark, and then I can continue with navigation."
+
+        if localization.status == "ambiguous":
+            names = [candidate.name_en for candidate in localization.candidates[:2]]
+            joined = " / ".join(names)
+            return f"I think you may be near {joined}, but I still need confirmation of your current location before planning the route to {destination_label}."
+
+        segments: list[str] = []
+        current_name = localization.candidates[0].name_en
+        segments.append(f"{profile_prefix}I identified the current location as {current_name}.")
+        if route is not None:
+            segments.append(
+                f"The route to {destination_label} is about {route.total_distance_m:g} meters and includes {len(route.steps)} steps."
+            )
+            if route.announcement:
+                segments.append(route.announcement)
+        if exhibit_context is not None:
+            facts = "; ".join(exhibit_context.facts[:2])
+            segments.append(f"At the destination, you can explain: {facts}")
+        if profile.preferences:
+            segments.append(f"Visitor preferences to keep in mind: {', '.join(profile.preferences)}.")
+        if profile.accessibility_needs or request.accessible_only:
+            needs = profile.accessibility_needs or ["accessible route"]
+            segments.append(f"Accessibility considerations: {', '.join(needs)}.")
+        return " ".join(segments)
 
     @app.get("/flow", include_in_schema=False)
     async def flow_lab() -> FileResponse:
@@ -142,19 +205,19 @@ def create_app(
         tags=["localization"],
     )
     async def localize_image(
-        image: UploadFile = File(description="JPEG、PNG 或 WebP 室内照片"),
+        image: UploadFile = File(description="Indoor photo in JPEG, PNG, or WebP format"),
         floor_hint: int | None = Form(default=None),
     ) -> VisualLocalizationResponse:
         if image.content_type not in ALLOWED_IMAGE_TYPES:
             raise HTTPException(
                 status_code=415,
-                detail="仅支持 JPEG、PNG 或 WebP 图片",
+                detail="Only JPEG, PNG, or WebP images are supported",
             )
         content = await image.read(MAX_IMAGE_BYTES + 1)
         if len(content) > MAX_IMAGE_BYTES:
-            raise HTTPException(status_code=413, detail="图片不得超过 5 MiB")
+            raise HTTPException(status_code=413, detail="Image must not exceed 5 MiB")
         if not content:
-            raise HTTPException(status_code=400, detail="图片内容为空")
+            raise HTTPException(status_code=400, detail="Image content is empty")
         try:
             evidence = await vlm_client.analyze(content, image.content_type)
         except VlmNotConfiguredError as exc:
@@ -245,10 +308,9 @@ def create_app(
             facts=exhibit[f"facts_{suffix}"],
             question=request.question,
             system_instruction=(
-                "Answer only from the supplied exhibit name, summary, and facts. "
-                "If they are insufficient, say that the curated exhibit data does not contain the answer."
+                "Answer only from the supplied exhibit name, summary, and facts. If they are insufficient, say that the curated exhibit data does not contain the answer."
                 if request.language == "en"
-                else "只能依据提供的展品名称、摘要和事实回答。如果资料不足，明确说明展品资料中没有该信息。"
+                else "Answer only from the supplied exhibit name, summary, and facts. If they are insufficient, clearly state that the curated exhibit data does not contain the answer."
             ),
         )
 
@@ -268,24 +330,115 @@ def create_app(
         exhibit_id: str, request: ExhibitQuestionRequest
     ) -> ExhibitContextResponse:
         try:
-            exhibit = repo.get_exhibit(exhibit_id)
+            return build_exhibit_context(exhibit_id, request.question, request.language)
         except LocationNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-        suffix = "en" if request.language == "en" else "zh"
-        return ExhibitContextResponse(
-            exhibit_id=exhibit["id"],
-            location_id=exhibit["location_id"],
-            name=exhibit[f"name_{suffix}"],
-            summary=exhibit[f"summary_{suffix}"],
-            facts=exhibit[f"facts_{suffix}"],
-            question=request.question,
-            system_instruction=(
-                "Answer only from the supplied facts. If the facts are insufficient, "
-                "say that the curated exhibit data does not contain the answer."
-                if request.language == "en"
-                else "只能依据提供的展品事实回答。如果资料不足，明确说明展品资料中没有该信息。"
-            ),
+    @app.post(
+        "/api/v1/guide/from-image",
+        response_model=GuideFlowResponse,
+        tags=["guide-flow"],
+    )
+    async def guide_from_image(
+        payload: str = Form(..., description="GuideFlowRequest JSON string"),
+        image: UploadFile = File(description="Indoor photo used to identify the current location"),
+    ) -> GuideFlowResponse:
+        if image.content_type not in ALLOWED_IMAGE_TYPES:
+            raise HTTPException(status_code=415, detail="Only JPEG, PNG, or WebP images are supported")
+        content = await image.read(MAX_IMAGE_BYTES + 1)
+        if len(content) > MAX_IMAGE_BYTES:
+            raise HTTPException(status_code=413, detail="Image must not exceed 5 MiB")
+        if not content:
+            raise HTTPException(status_code=400, detail="Image content is empty")
+
+        try:
+            request = GuideFlowRequest.model_validate_json(payload)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"Invalid payload: {exc}") from exc
+
+        try:
+            evidence = await vlm_client.analyze(content, image.content_type)
+        except VlmNotConfiguredError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except VlmResponseError as exc:
+            raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+        localization = visual_localizer.locate(evidence)
+
+        if request.current_location:
+            try:
+                node = repo.get_location(request.current_location)
+            except LocationNotFoundError as exc:
+                raise HTTPException(status_code=404, detail=str(exc)) from exc
+            localization = VisualLocalizationResponse(
+                status="matched",
+                node_id=node["id"],
+                confidence=1.0,
+                needs_confirmation=False,
+                candidates=[
+                    VisualCandidateResponse(
+                        node_id=node["id"],
+                        name_zh=node["name_zh"],
+                        name_en=node["name_en"],
+                        floor=node["floor"],
+                        score=1.0,
+                        matched_features=["manual_override"],
+                    )
+                ],
+                evidence=evidence,
+            )
+
+        try:
+            resolved_destination_id, destination_type, exhibit = repo.resolve_destination(request.destination)
+        except LocationNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+        route_response: RouteResponse | None = None
+        exhibit_response: ExhibitContextResponse | None = None
+
+        if localization.node_id is not None:
+            try:
+                route_result = navigator.plan(
+                    localization.node_id,
+                    resolved_destination_id,
+                    request.language,
+                    request.accessible_only or bool(request.visitor_profile.accessibility_needs),
+                )
+                route_response = RouteResponse(
+                    from_id=route_result.from_id,
+                    to_id=route_result.to_id,
+                    total_distance_m=route_result.total_distance_m,
+                    announcement=route_result.announcement,
+                    steps=[step.__dict__ for step in route_result.steps],
+                )
+            except RouteNotFoundError as exc:
+                raise HTTPException(status_code=422, detail=str(exc)) from exc
+            except LocationNotFoundError as exc:
+                raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+        if destination_type == "exhibit" and exhibit is not None:
+            exhibit_question = request.question or "Give me a short introduction suitable for this visitor"
+            exhibit_response = build_exhibit_context(exhibit["id"], exhibit_question, request.language)
+            destination_label = exhibit["name_en"] if request.language == "en" else exhibit["name_zh"]
+        else:
+            destination_node = repo.get_location(resolved_destination_id)
+            destination_label = destination_node["name_en"] if request.language == "en" else destination_node["name_zh"]
+
+        reply = build_personalized_reply(
+            request=request,
+            localization=localization,
+            route=route_response,
+            exhibit_context=exhibit_response,
+            destination_label=destination_label,
+        )
+
+        return GuideFlowResponse(
+            localization=localization,
+            resolved_destination_id=resolved_destination_id,
+            destination_type=destination_type,
+            route=route_response,
+            exhibit_context=exhibit_response,
+            reply=reply,
         )
 
     @app.get("/api/v1/resolve", tags=["places"])
@@ -295,7 +448,7 @@ def create_app(
     ) -> dict[str, str]:
         value = q or name
         if value is None:
-            raise HTTPException(status_code=422, detail="需要查询参数 q 或 name")
+            raise HTTPException(status_code=422, detail="A query parameter q or name is required")
         try:
             return {"node_id": repo.resolve_location(value)}
         except LocationNotFoundError as exc:
@@ -307,4 +460,4 @@ def create_app(
 try:
     app = create_app()
 except DataValidationError as exc:
-    raise RuntimeError(f"导览数据加载失败：{exc}") from exc
+    raise RuntimeError(f"Failed to load guide data: {exc}") from exc
