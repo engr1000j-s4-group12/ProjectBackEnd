@@ -1,55 +1,74 @@
-const storageKey = "longbin-flow-lab-logs";
+const storageKey = "longbin-flow-lab-communications";
+
+const connections = {
+  "user>terminal": ["user", "terminal", "User -> Terminal"],
+  "terminal>vlm": ["terminal", "vlm", "Terminal -> VLM"],
+  "vlm>localizer": ["vlm", "localizer", "VLM -> Localizer"],
+  "terminal>context": ["terminal", "context", "Terminal -> RAG / DB"],
+  "localizer>navigator": ["localizer", "navigator", "Localizer -> Navigator"],
+  "context>navigator": ["context", "navigator", "RAG / DB -> Navigator"],
+  "navigator>composer": ["navigator", "composer", "Navigator -> Response"],
+  "composer>tts": ["composer", "tts", "Response -> TTS"],
+};
 
 const state = {
   imageFile: null,
+  places: [],
+  guideContext: null,
+  localization: null,
+  route: null,
   logs: loadLogs(),
-  currentLocation: null,
-  lastPayload: {
-    hint: "在左侧输入文本、照片或参数，然后点击按钮发送请求。",
-  },
-  lastResponse: {
-    hint: "响应会显示在这里。",
-  },
-  routeSteps: [],
+  selectedModule: null,
+  activeEdge: "user>terminal",
+  edgeData: {},
 };
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
 const els = {
+  healthBadge: $("#healthBadge"),
+  placesBadge: $("#placesBadge"),
+  contextBadge: $("#contextBadge"),
+  currentNodeStat: $("#currentNodeStat"),
+  targetNodeStat: $("#targetNodeStat"),
+  requestCountStat: $("#requestCountStat"),
+  ttsLengthStat: $("#ttsLengthStat"),
   utterance: $("#utterance"),
-  fromLocation: $("#fromLocation"),
-  toLocation: $("#toLocation"),
-  floorHint: $("#floorHint"),
   language: $("#language"),
-  accessibleOnly: $("#accessibleOnly"),
-  recognizedTexts: $("#recognizedTexts"),
-  objects: $("#objects"),
-  sceneDescription: $("#sceneDescription"),
+  floorHint: $("#floorHint"),
   imageFile: $("#imageFile"),
   imageMeta: $("#imageMeta"),
   imagePreview: $("#imagePreview"),
   dropZone: $("#dropZone"),
-  exhibitId: $("#exhibitId"),
-  question: $("#question"),
+  recognizedTexts: $("#recognizedTexts"),
+  objects: $("#objects"),
+  sceneDescription: $("#sceneDescription"),
+  visitorCard: $("#visitorCard"),
+  fromLocation: $("#fromLocation"),
+  toLocation: $("#toLocation"),
+  accessibleOnly: $("#accessibleOnly"),
+  routeCard: $("#routeCard"),
+  moduleBoard: $("#moduleBoard"),
+  selectedEdgeLabel: $("#selectedEdgeLabel"),
+  detailTitle: $("#detailTitle"),
+  detailStatus: $("#detailStatus"),
   payloadView: $("#payloadView"),
   responseView: $("#responseView"),
-  routeSteps: $("#routeSteps"),
   logList: $("#logList"),
   logCount: $("#logCount"),
-  healthBadge: $("#healthBadge"),
-  placesBadge: $("#placesBadge"),
-  currentLocation: $("#currentLocation"),
+  ttsText: $("#ttsText"),
+  outputState: $("#outputState"),
   localizeSummary: $("#localizeSummary"),
   routeSummary: $("#routeSummary"),
-  lastEndpoint: $("#lastEndpoint"),
+  visitSummary: $("#visitSummary"),
+  routeSteps: $("#routeSteps"),
   placeOptions: $("#placeOptions"),
 };
 
 function loadLogs() {
   try {
-    const raw = localStorage.getItem(storageKey);
-    return raw ? JSON.parse(raw) : [];
+    return JSON.parse(localStorage.getItem(storageKey) || "[]");
   } catch {
     return [];
   }
@@ -60,111 +79,117 @@ function saveLogs() {
 }
 
 function pretty(value) {
-  return JSON.stringify(value, null, 2);
+  return JSON.stringify(value ?? {}, null, 2);
 }
 
 function nowLabel() {
   return new Date().toLocaleString("zh-CN", { hour12: false });
 }
 
-function setBadge(element, text, kind) {
+function setPill(element, text, kind = "muted") {
   element.textContent = text;
-  element.classList.remove("status-muted", "status-ok", "status-warn", "status-bad");
-  element.classList.add(`status-${kind}`);
+  element.classList.remove("muted", "ok", "warn", "bad");
+  element.classList.add(kind);
 }
 
-function setNode(node, mode, detail) {
-  const card = document.querySelector(`[data-node="${node}"]`);
-  if (!card) return;
-  card.classList.remove("active", "ok", "error");
-  if (mode) card.classList.add(mode);
-  if (detail) {
-    const code = card.querySelector("code");
-    code.textContent = detail.length > 34 ? `${detail.slice(0, 31)}...` : detail;
-  }
+function setModule(module, kind = "") {
+  const node = $(`[data-module="${module}"]`);
+  if (!node) return;
+  node.classList.remove("active", "ok", "error");
+  if (kind) node.classList.add(kind);
 }
 
-function resetActiveNodes() {
-  $$(".module-card").forEach((node) => {
-    node.classList.remove("active", "error");
+function resetModuleState() {
+  $$(".module-node").forEach((node) => {
+    node.classList.remove("active", "ok", "error", "selected");
   });
 }
 
-function updateInspector(payload = state.lastPayload, response = state.lastResponse) {
-  state.lastPayload = payload;
-  state.lastResponse = response;
-  els.payloadView.textContent = pretty(payload);
-  els.responseView.textContent = pretty(response);
+function updateStats() {
+  els.currentNodeStat.textContent = state.localization?.node_id || els.fromLocation.value || "未定位";
+  els.targetNodeStat.textContent = els.toLocation.value || "未设置";
+  els.requestCountStat.textContent = String(state.logs.length);
+  const ttsText = els.ttsText.value.trim();
+  els.ttsLengthStat.textContent = ttsText.startsWith("运行流程后") ? "0" : String(ttsText.length);
 }
 
-function renderRouteSteps(steps) {
-  state.routeSteps = steps || [];
-  els.routeSteps.textContent = "";
-  if (!state.routeSteps.length) {
-    const empty = document.createElement("li");
-    empty.textContent = "暂无路线步骤。";
-    els.routeSteps.appendChild(empty);
-    return;
-  }
-  state.routeSteps.forEach((step) => {
-    const item = document.createElement("li");
-    const title = document.createElement("strong");
-    title.textContent = `${step.from_id} -> ${step.to_id} (${step.distance_m}m)`;
-    const text = document.createElement("div");
-    text.textContent = step.instruction;
-    item.append(title, text);
-    els.routeSteps.appendChild(item);
-  });
+function selectEdge(edgeKey) {
+  if (!connections[edgeKey]) return;
+  state.activeEdge = edgeKey;
+  $$(".edge").forEach((edge) => edge.classList.toggle("active", edge.dataset.edge === edgeKey));
+  $$(".module-node").forEach((node) => node.classList.remove("selected"));
+  const [from, to, label] = connections[edgeKey];
+  $(`[data-module="${from}"]`)?.classList.add("selected");
+  $(`[data-module="${to}"]`)?.classList.add("selected");
+  const data = state.edgeData[edgeKey] || {
+    status: "未运行",
+    payload: { edge: edgeKey },
+    response: { message: "运行流程后，这里会出现这两个模块之间的通信内容。" },
+  };
+  els.selectedEdgeLabel.textContent = label;
+  els.detailTitle.textContent = label;
+  els.detailStatus.textContent = `${data.method || "LOCAL"} ${data.status}`;
+  els.payloadView.textContent = pretty(data.payload);
+  els.responseView.textContent = pretty(data.response);
 }
 
-function addLog(entry) {
-  const normalized = {
+function recordEdge(edgeKey, payload, response, meta = {}) {
+  if (!connections[edgeKey]) return;
+  const entry = {
     id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
     at: nowLabel(),
-    ...entry,
+    edge: edgeKey,
+    from: connections[edgeKey][0],
+    to: connections[edgeKey][1],
+    label: connections[edgeKey][2],
+    method: meta.method || "LOCAL",
+    endpoint: meta.endpoint || "local",
+    status: meta.status || "ok",
+    duration_ms: meta.duration_ms,
+    payload,
+    response,
   };
-  state.logs.unshift(normalized);
+  state.edgeData[edgeKey] = entry;
+  state.logs.unshift(entry);
   state.logs = state.logs.slice(0, 200);
   saveLogs();
   renderLogs();
+  if (state.activeEdge === edgeKey || meta.focus) selectEdge(edgeKey);
+  updateStats();
 }
 
 function renderLogs() {
   els.logList.textContent = "";
   els.logCount.textContent = `${state.logs.length} 条`;
-
   if (!state.logs.length) {
     const empty = document.createElement("div");
-    empty.className = "log-item";
+    empty.className = "info-card";
     empty.textContent = "暂无通信记录。";
     els.logList.appendChild(empty);
+    updateStats();
     return;
   }
-
   state.logs.forEach((entry) => {
     const row = document.createElement("button");
-    row.className = "log-item";
     row.type = "button";
-    row.addEventListener("click", () => {
-      updateInspector(entry.payload ?? {}, entry.response ?? {});
-      renderRouteSteps(entry.response?.steps || []);
-    });
+    row.className = "log-item";
+    row.addEventListener("click", () => selectEdge(entry.edge));
 
     const time = document.createElement("div");
     const timeStrong = document.createElement("strong");
-    timeStrong.textContent = entry.at;
+    timeStrong.textContent = entry.at.split(" ").pop();
     const duration = document.createElement("span");
     duration.textContent =
-      entry.duration_ms === undefined ? "local" : `${entry.duration_ms} ms`;
+      entry.duration_ms === undefined ? entry.method : `${entry.duration_ms} ms`;
     time.append(timeStrong, duration);
 
     const detail = document.createElement("div");
     const flow = document.createElement("div");
     flow.className = "log-flow";
-    flow.textContent = `${entry.from} -> ${entry.to}`;
+    flow.textContent = entry.label;
     const endpoint = document.createElement("div");
     endpoint.className = "log-endpoint";
-    endpoint.textContent = `${entry.method || "LOCAL"} ${entry.endpoint}`;
+    endpoint.textContent = `${entry.method} ${entry.endpoint}`;
     detail.append(flow, endpoint);
 
     const status = document.createElement("div");
@@ -173,113 +198,7 @@ function renderLogs() {
     row.append(time, detail, status);
     els.logList.appendChild(row);
   });
-}
-
-async function fetchJson(endpoint, options) {
-  const method = options.method || "POST";
-  const payload = options.payload ?? null;
-  const from = options.from || "Terminal";
-  const to = options.to || "FastAPI";
-  const started = performance.now();
-  resetActiveNodes();
-  setNode("terminal", "active", "request");
-  setNode("api", "active", endpoint);
-  els.lastEndpoint.textContent = endpoint;
-  updateInspector(payload ?? { method, endpoint }, { status: "waiting" });
-
-  const requestOptions = { method, headers: {} };
-  if (payload !== null && method !== "GET") {
-    requestOptions.headers["Content-Type"] = "application/json";
-    requestOptions.body = JSON.stringify(payload);
-  }
-
-  try {
-    const response = await fetch(endpoint, requestOptions);
-    const body = await readResponse(response);
-    const duration = Math.round(performance.now() - started);
-    const entry = {
-      from,
-      to,
-      endpoint,
-      method,
-      status: response.status,
-      duration_ms: duration,
-      payload,
-      response: body,
-    };
-    addLog(entry);
-    updateInspector(payload ?? { method, endpoint }, body);
-    setNode("api", response.ok ? "ok" : "error", `${response.status}`);
-    setNode("response", response.ok ? "ok" : "error", `${response.status}`);
-    return { ok: response.ok, status: response.status, data: body };
-  } catch (error) {
-    const duration = Math.round(performance.now() - started);
-    const body = { error: String(error) };
-    addLog({
-      from,
-      to,
-      endpoint,
-      method,
-      status: "network-error",
-      duration_ms: duration,
-      payload,
-      response: body,
-    });
-    updateInspector(payload ?? { method, endpoint }, body);
-    setNode("api", "error", "network");
-    setNode("response", "error", "network");
-    return { ok: false, status: 0, data: body };
-  }
-}
-
-async function fetchForm(endpoint, formData, payloadSummary, options) {
-  const started = performance.now();
-  resetActiveNodes();
-  setNode("terminal", "active", "image");
-  setNode("api", "active", endpoint);
-  setNode("vlm", "active", "VLM");
-  els.lastEndpoint.textContent = endpoint;
-  updateInspector(payloadSummary, { status: "waiting" });
-
-  try {
-    const response = await fetch(endpoint, { method: "POST", body: formData });
-    const body = await readResponse(response);
-    const duration = Math.round(performance.now() - started);
-    addLog({
-      from: options.from || "Terminal",
-      to: options.to || "VLM Adapter",
-      endpoint,
-      method: "POST",
-      status: response.status,
-      duration_ms: duration,
-      payload: payloadSummary,
-      response: body,
-    });
-    updateInspector(payloadSummary, body);
-    setNode("api", response.ok ? "ok" : "error", `${response.status}`);
-    setNode("vlm", response.ok ? "ok" : "error", response.ok ? "evidence" : "failed");
-    setNode("localizer", response.ok ? "ok" : "error", "candidate");
-    setNode("response", response.ok ? "ok" : "error", `${response.status}`);
-    return { ok: response.ok, status: response.status, data: body };
-  } catch (error) {
-    const duration = Math.round(performance.now() - started);
-    const body = { error: String(error) };
-    addLog({
-      from: "Terminal",
-      to: "VLM Adapter",
-      endpoint,
-      method: "POST",
-      status: "network-error",
-      duration_ms: duration,
-      payload: payloadSummary,
-      response: body,
-    });
-    updateInspector(payloadSummary, body);
-    setNode("api", "error", "network");
-    setNode("vlm", "error", "network");
-    setNode("response", "error", "network");
-    return { ok: false, status: 0, data: body };
-  }
+  updateStats();
 }
 
 async function readResponse(response) {
@@ -292,6 +211,81 @@ async function readResponse(response) {
   }
 }
 
+async function requestJson(endpoint, options = {}) {
+  const method = options.method || "GET";
+  const payload = options.payload;
+  const started = performance.now();
+  const requestOptions = { method, headers: {} };
+  if (payload !== undefined && method !== "GET") {
+    requestOptions.headers["Content-Type"] = "application/json";
+    requestOptions.body = JSON.stringify(payload);
+  }
+  if (options.activeModules) {
+    options.activeModules.forEach((module) => setModule(module, "active"));
+  }
+  try {
+    const response = await fetch(endpoint, requestOptions);
+    const body = await readResponse(response);
+    const duration = Math.round(performance.now() - started);
+    if (options.edge) {
+      recordEdge(options.edge, payload ?? { method, endpoint }, body, {
+        method,
+        endpoint,
+        status: response.status,
+        duration_ms: duration,
+        focus: options.focus,
+      });
+    }
+    (options.okModules || []).forEach((module) => setModule(module, response.ok ? "ok" : "error"));
+    return { ok: response.ok, status: response.status, data: body };
+  } catch (error) {
+    const duration = Math.round(performance.now() - started);
+    const body = { error: String(error) };
+    if (options.edge) {
+      recordEdge(options.edge, payload ?? { method, endpoint }, body, {
+        method,
+        endpoint,
+        status: "network-error",
+        duration_ms: duration,
+        focus: true,
+      });
+    }
+    (options.okModules || []).forEach((module) => setModule(module, "error"));
+    return { ok: false, status: 0, data: body };
+  }
+}
+
+async function requestForm(endpoint, formData, payloadSummary, options = {}) {
+  const started = performance.now();
+  (options.activeModules || []).forEach((module) => setModule(module, "active"));
+  try {
+    const response = await fetch(endpoint, { method: "POST", body: formData });
+    const body = await readResponse(response);
+    const duration = Math.round(performance.now() - started);
+    recordEdge(options.edge || "terminal>vlm", payloadSummary, body, {
+      method: "POST",
+      endpoint,
+      status: response.status,
+      duration_ms: duration,
+      focus: options.focus,
+    });
+    (options.okModules || []).forEach((module) => setModule(module, response.ok ? "ok" : "error"));
+    return { ok: response.ok, status: response.status, data: body };
+  } catch (error) {
+    const duration = Math.round(performance.now() - started);
+    const body = { error: String(error) };
+    recordEdge(options.edge || "terminal>vlm", payloadSummary, body, {
+      method: "POST",
+      endpoint,
+      status: "network-error",
+      duration_ms: duration,
+      focus: true,
+    });
+    (options.okModules || []).forEach((module) => setModule(module, "error"));
+    return { ok: false, status: 0, data: body };
+  }
+}
+
 function parseLines(value) {
   return value
     .split(/\n|,/)
@@ -300,7 +294,9 @@ function parseLines(value) {
 }
 
 function roomTokens(text) {
-  return Array.from(new Set((text.match(/\b4\d{2}[A-C]?\b/gi) || []).map((v) => v.toUpperCase())));
+  return Array.from(
+    new Set((text.match(/\b[1-4]\d{2}[A-C]?\b/gi) || []).map((value) => value.toUpperCase())),
+  );
 }
 
 function parseObjects() {
@@ -331,151 +327,169 @@ function buildVisualPayload() {
 
 function buildRoutePayload() {
   return {
-    from_location: els.fromLocation.value.trim() || state.currentLocation || "LB-4F-ROOM-400A",
-    to_location: els.toLocation.value.trim() || "LB-4F-ROOM-429B",
+    from_location: state.localization?.node_id || els.fromLocation.value.trim(),
+    to_location: els.toLocation.value.trim(),
     language: els.language.value,
     accessible_only: els.accessibleOnly.checked,
   };
 }
 
-function buildContextPayload() {
-  return {
-    question: els.question.value.trim() || els.utterance.value.trim() || "这个展品在哪里？",
-    language: els.language.value,
-  };
-}
-
-function buildIntent() {
+function inferIntent() {
   const utterance = els.utterance.value.trim();
   const rooms = roomTokens(utterance);
-  if (rooms.length >= 1 && !els.fromLocation.value.trim()) {
-    els.fromLocation.value = rooms[0];
-  }
   if (rooms.length >= 2) {
-    els.fromLocation.value = rooms[0];
-    els.toLocation.value = rooms[1];
-  } else if (rooms.length === 1 && /去|到|前往|导航/.test(utterance)) {
-    els.toLocation.value = rooms[0];
+    els.fromLocation.value = `LB-${rooms[0][0]}F-ROOM-${rooms[0]}`;
+    els.toLocation.value = `LB-${rooms[1][0]}F-ROOM-${rooms[1]}`;
+  } else if (rooms.length === 1 && /去|到|前往|导航|找/.test(utterance)) {
+    els.toLocation.value = `LB-${rooms[0][0]}F-ROOM-${rooms[0]}`;
   }
-  if (/机器人|robot/i.test(utterance)) {
-    els.exhibitId.value = "ROBOT-001";
-    if (/去|到|前往|导航/.test(utterance)) {
-      els.toLocation.value = "LB-4F-ROOM-400";
-    }
+  if (/李政道|画展|艺术展/.test(utterance)) {
+    els.fromLocation.value = "LB-3F-EVENT-LEE-ART";
+    els.toLocation.value = "LB-3F-ROOM-300";
+    els.floorHint.value = "3";
+    els.recognizedTexts.value = "李政道画展\nLEEA ART";
+    els.sceneDescription.value = "三楼开放区域有李政道画展展板";
   }
-
-  const intent = {
+  if (/学院|介绍|college/i.test(utterance)) {
+    els.toLocation.value = "LB-4F-PERMANENT-COLLEGE-INTRO";
+  }
+  const payload = {
     utterance,
-    inferred: {
-      rooms,
-      from_location: els.fromLocation.value.trim(),
-      to_location: els.toLocation.value.trim(),
-      exhibit_id: els.exhibitId.value.trim(),
-      language: els.language.value,
-      accessible_only: els.accessibleOnly.checked,
-    },
-    next_json: {
-      visual: buildVisualPayload(),
-      route: buildRoutePayload(),
-      exhibit_context: buildContextPayload(),
-    },
+    language: els.language.value,
+    current_image: state.imageFile
+      ? { name: state.imageFile.name, size: state.imageFile.size, type: state.imageFile.type }
+      : { mode: "visual_json", evidence: buildVisualPayload() },
+    inferred_route: buildRoutePayload(),
   };
-  resetActiveNodes();
-  setNode("terminal", "ok", "intent");
-  addLog({
-    from: "Terminal",
-    to: "Intent Builder",
-    endpoint: "local://intent",
-    method: "LOCAL",
-    status: "built",
-    payload: { utterance },
-    response: intent,
-  });
-  updateInspector({ utterance }, intent);
+  recordEdge("user>terminal", { spoken_text: utterance }, payload, { focus: true });
+  setModule("user", "ok");
+  setModule("terminal", "ok");
+  updateStats();
+  return payload;
 }
 
-function applyLocalization(data) {
-  const summary = data.status
-    ? `${data.status}${data.node_id ? `: ${data.node_id}` : ""}`
-    : "无定位结果";
-  els.localizeSummary.textContent = summary;
-  if (data.node_id) {
-    state.currentLocation = data.node_id;
-    els.fromLocation.value = data.node_id;
-    setBadge(els.currentLocation, `current: ${data.node_id}`, "ok");
-  } else if (data.candidates?.length) {
-    const best = data.candidates[0];
-    setBadge(els.currentLocation, `candidate: ${best.node_id}`, "warn");
+function renderVisitorContext(data) {
+  const visit = data?.visit;
+  const records = data?.location_records || [];
+  if (!visit) {
+    els.visitorCard.textContent = "数据库中没有活跃代表团任务。";
+    els.visitSummary.textContent = "无活跃任务";
+  } else {
+    const lines = [
+      `代表团：${visit.delegation_name || "未命名"}`,
+      `机构：${visit.institution || "未填写"}`,
+      `国家：${visit.country || "未填写"}`,
+      `目的：${visit.purpose || "未填写"}`,
+    ];
+    els.visitorCard.innerHTML = lines.map((line) => `<div>${escapeHtml(line)}</div>`).join("");
+    els.visitSummary.textContent = visit.delegation_name || `Visit #${visit.id}`;
   }
-  setNode("localizer", data.status === "not_found" ? "error" : "ok", data.status || "done");
-  setNode("repository", "ok", "landmarks");
+  if (records.length) {
+    els.visitorCard.insertAdjacentHTML(
+      "beforeend",
+      `<div class="context-mini">当前位置资料：${records.slice(0, 3).map((item) => escapeHtml(item.title_zh || item.node_id)).join(" / ")}</div>`,
+    );
+  }
 }
 
-function applyRoute(data) {
-  const steps = data.steps || [];
-  renderRouteSteps(steps);
-  els.routeSummary.textContent =
-    data.total_distance_m !== undefined
-      ? `${data.total_distance_m} m / ${steps.length} 步`
-      : "无路线";
-  setNode("navigator", steps.length || data.total_distance_m === 0 ? "ok" : "error", "route");
-  setNode("repository", "ok", "graph");
+async function loadContext() {
+  const currentNode = state.localization?.node_id || els.fromLocation.value.trim();
+  const params = new URLSearchParams();
+  if (currentNode) params.set("current_node", currentNode);
+  const endpoint = `/api/v1/guide/context${params.toString() ? `?${params}` : ""}`;
+  const result = await requestJson(endpoint, {
+    method: "GET",
+    edge: "terminal>context",
+    activeModules: ["terminal", "context"],
+    okModules: ["context"],
+    focus: true,
+  });
+  if (result.ok) {
+    state.guideContext = result.data;
+    renderVisitorContext(result.data);
+    setPill(els.contextBadge, "数据库已读取", "ok");
+  } else {
+    setPill(els.contextBadge, `数据库 ${result.status}`, "bad");
+  }
+  return result;
 }
 
 async function checkHealth() {
-  const result = await fetchJson("/health", {
+  const result = await requestJson("/health", {
     method: "GET",
-    from: "Browser",
-    to: "FastAPI",
+    activeModules: ["terminal"],
   });
-  setBadge(
+  setPill(
     els.healthBadge,
-    result.ok ? `health: ${result.data.status}` : `health: ${result.status}`,
+    result.ok ? `后端 ${result.data.status}` : `后端 ${result.status}`,
     result.ok ? "ok" : "bad",
   );
 }
 
 async function loadPlaces() {
-  const result = await fetchJson("/api/v1/places", {
+  const result = await requestJson("/api/v1/places", {
     method: "GET",
-    from: "Browser",
-    to: "Repository",
+    activeModules: ["context"],
+    okModules: ["context"],
   });
   if (!result.ok) {
-    setBadge(els.placesBadge, `places: ${result.status}`, "bad");
+    setPill(els.placesBadge, `节点 ${result.status}`, "bad");
     return;
   }
-  const places = result.data.places || [];
+  state.places = result.data.places || [];
   els.placeOptions.textContent = "";
-  places.forEach((place) => {
+  state.places.forEach((place) => {
     const option = document.createElement("option");
     option.value = place.id;
     option.label = `${place.name_zh} / ${place.name_en}`;
     els.placeOptions.appendChild(option);
   });
-  setBadge(els.placesBadge, `places: ${places.length}`, "ok");
-  setNode("repository", "ok", `${places.length} nodes`);
+  setPill(els.placesBadge, `节点 ${state.places.length}`, "ok");
+}
+
+function applyLocalization(data) {
+  state.localization = data;
+  const ok = data.status === "matched";
+  if (data.node_id) {
+    els.fromLocation.value = data.node_id;
+  }
+  els.localizeSummary.textContent = data.node_id
+    ? `${data.status}: ${data.node_id}`
+    : `${data.status || "unknown"} / ${data.candidates?.length || 0} 个候选`;
+  setModule("localizer", ok ? "ok" : data.status === "ambiguous" ? "active" : "error");
+  recordEdge(
+    "localizer>navigator",
+    { current_node: data.node_id, confidence: data.confidence, status: data.status },
+    {
+      accepted_start_node: data.node_id || null,
+      candidates: data.candidates || [],
+      needs_confirmation: data.needs_confirmation,
+    },
+  );
+  updateStats();
 }
 
 async function sendVisual() {
-  const payload = buildVisualPayload();
-  const result = await fetchJson("/api/v1/localize/visual", {
+  const evidence = buildVisualPayload();
+  recordEdge(
+    "terminal>vlm",
+    { mode: "visual_json", source: "manual fields", evidence },
+    { evidence, note: "未上传图片，直接使用结构化视觉证据模拟 VLM 输出。" },
+  );
+  const result = await requestJson("/api/v1/localize/visual", {
     method: "POST",
-    from: "Terminal",
-    to: "VisualLocalizer",
-    payload,
+    payload: evidence,
+    edge: "vlm>localizer",
+    activeModules: ["vlm", "localizer"],
+    okModules: ["vlm", "localizer"],
+    focus: true,
   });
   if (result.data) applyLocalization(result.data);
+  return result;
 }
 
 async function sendImage() {
-  if (!state.imageFile) {
-    updateInspector(
-      { image: null },
-      { error: "请先选择或拖入一张照片。" },
-    );
-    return;
-  }
+  if (!state.imageFile) return sendVisual();
   const formData = new FormData();
   formData.append("image", state.imageFile);
   if (els.floorHint.value.trim()) {
@@ -489,45 +503,162 @@ async function sendImage() {
     },
     floor_hint: els.floorHint.value.trim() || null,
   };
-  const result = await fetchForm("/api/v1/localize/image", formData, payloadSummary, {
-    from: "Terminal",
-    to: "VLM Adapter",
+  const result = await requestForm("/api/v1/localize/image", formData, payloadSummary, {
+    edge: "terminal>vlm",
+    activeModules: ["terminal", "vlm", "localizer"],
+    okModules: ["vlm", "localizer"],
+    focus: true,
   });
+  recordEdge(
+    "vlm>localizer",
+    { image_analysis_result: "由后端 VLM 适配器生成，详情见上一段响应。" },
+    result.data,
+  );
   if (result.data) applyLocalization(result.data);
+  return result;
+}
+
+function renderRouteSteps(steps = []) {
+  els.routeSteps.textContent = "";
+  if (!steps.length) {
+    const empty = document.createElement("li");
+    empty.textContent = "暂无内部步骤。";
+    els.routeSteps.appendChild(empty);
+    return;
+  }
+  steps.forEach((step) => {
+    const item = document.createElement("li");
+    item.textContent = `${step.from_id} -> ${step.to_id} · ${step.distance_m}m · ${step.instruction}`;
+    els.routeSteps.appendChild(item);
+  });
+}
+
+function applyRoute(data) {
+  state.route = data;
+  const steps = data.steps || [];
+  renderRouteSteps(steps);
+  const summary =
+    data.total_distance_m !== undefined
+      ? `${data.total_distance_m} m / ${steps.length} 步`
+      : "路线不可用";
+  els.routeSummary.textContent = summary;
+  els.routeCard.innerHTML = data.announcement
+    ? `<strong>${escapeHtml(data.announcement)}</strong><div class="context-mini">${escapeHtml(summary)}</div>`
+    : "路线生成失败。";
+  recordEdge(
+    "navigator>composer",
+    data,
+    {
+      announcement: data.announcement,
+      compact_for_device: true,
+      internal_steps_count: steps.length,
+    },
+  );
+  setModule("navigator", data.announcement ? "ok" : "error");
+  updateStats();
 }
 
 async function sendRoute() {
   const payload = buildRoutePayload();
-  const result = await fetchJson("/api/v1/route", {
+  recordEdge(
+    "context>navigator",
+    {
+      visit: state.guideContext?.visit || null,
+      location_records_count: state.guideContext?.location_records?.length || 0,
+      route_request: payload,
+    },
+    { note: "Navigator 使用 SQLite 地图节点和边生成确定性路线。" },
+  );
+  const result = await requestJson("/api/v1/route", {
     method: "POST",
-    from: "Terminal",
-    to: "Navigator",
     payload,
+    edge: "context>navigator",
+    activeModules: ["context", "navigator"],
+    okModules: ["navigator"],
+    focus: true,
   });
   if (result.data) applyRoute(result.data);
+  return result;
 }
 
-async function sendContext() {
-  const exhibitId = els.exhibitId.value.trim() || "ROBOT-001";
-  const payload = buildContextPayload();
-  const result = await fetchJson(`/api/v1/exhibits/${encodeURIComponent(exhibitId)}/context`, {
-    method: "POST",
-    from: "Terminal",
-    to: "Exhibit Context",
-    payload,
-  });
-  setNode("exhibit", result.ok ? "ok" : "error", exhibitId);
+function composeTts() {
+  let text = "";
+  if (state.route?.announcement) {
+    text = state.route.announcement;
+  } else if (state.localization?.status === "ambiguous") {
+    text = "我暂时无法确认当前位置，请将设备朝向门牌或展板后再拍一次。";
+  } else if (state.localization?.status === "not_found") {
+    text = "没有识别到当前位置，请靠近门牌或展板后再试一次。";
+  } else {
+    text = "当前流程还没有生成可播报结果。";
+  }
+  els.ttsText.value = text;
+  setPill(els.outputState, text ? "已生成" : "等待运行", text ? "ok" : "muted");
+  setModule("composer", "ok");
+  setModule("tts", "ok");
+  recordEdge(
+    "composer>tts",
+    {
+      language: els.language.value,
+      route_announcement: state.route?.announcement || null,
+      localization_status: state.localization?.status || null,
+    },
+    { tts_text: text, speak_immediately: true },
+    { focus: true },
+  );
+  updateStats();
 }
 
-async function runScenario() {
-  buildIntent();
+async function runFlow() {
+  resetModuleState();
+  inferIntent();
+  await loadContext();
   if (state.imageFile) {
     await sendImage();
   } else {
     await sendVisual();
   }
   await sendRoute();
-  await sendContext();
+  composeTts();
+}
+
+function setScenario(name) {
+  state.imageFile = null;
+  els.imageFile.value = "";
+  els.imagePreview.classList.add("hidden");
+  if (name === "lee") {
+    els.utterance.value = "我在三楼李政道画展附近，想去300会议室。";
+    els.language.value = "zh";
+    els.floorHint.value = "3";
+    els.fromLocation.value = "LB-3F-EVENT-LEE-ART";
+    els.toLocation.value = "LB-3F-ROOM-300";
+    els.recognizedTexts.value = "李政道画展\nLEE ART";
+    els.objects.value = "展板:0.92\n画展:0.88";
+    els.sceneDescription.value = "三楼开放区域可见李政道画展展板";
+  } else if (name === "college") {
+    els.utterance.value = "我从访客电梯出来，带来宾去学院介绍区域。";
+    els.language.value = "zh";
+    els.floorHint.value = "4";
+    els.fromLocation.value = "LB-1F-OPEN-08";
+    els.toLocation.value = "LB-4F-PERMANENT-COLLEGE-INTRO";
+    els.recognizedTexts.value = "出口\n电梯";
+    els.objects.value = "电梯:0.91\n出口:0.83";
+    els.sceneDescription.value = "一楼访客电梯附近，面向大厅出口";
+  } else {
+    els.utterance.value = "我现在在400A附近，想去429B。";
+    els.language.value = "zh";
+    els.floorHint.value = "4";
+    els.fromLocation.value = "LB-4F-ROOM-400A";
+    els.toLocation.value = "LB-4F-ROOM-429B";
+    els.recognizedTexts.value = "400A";
+    els.objects.value = "400A:0.98\n门牌:0.82";
+    els.sceneDescription.value = "走廊左侧可见400A房间门牌";
+  }
+  els.imageMeta.textContent = "未选择图片时使用下方视觉 JSON 模拟";
+  state.localization = null;
+  state.route = null;
+  renderRouteSteps([]);
+  updateStats();
 }
 
 function setImage(file) {
@@ -546,31 +677,38 @@ function exportLogs() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `longbin-flow-logs-${Date.now()}.json`;
+  link.download = `longbin-flow-communications-${Date.now()}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function bindEvents() {
-  $("#checkHealth").addEventListener("click", checkHealth);
-  $("#loadPlaces").addEventListener("click", loadPlaces);
-  $("#buildIntent").addEventListener("click", buildIntent);
+  $("#loadContext").addEventListener("click", loadContext);
+  $("#runFlow").addEventListener("click", runFlow);
   $("#sendVisual").addEventListener("click", sendVisual);
-  $("#sendImage").addEventListener("click", sendImage);
   $("#sendRoute").addEventListener("click", sendRoute);
-  $("#sendContext").addEventListener("click", sendContext);
-  $("#runScenario").addEventListener("click", runScenario);
-  $("#exportLogs").addEventListener("click", exportLogs);
   $("#clearLogs").addEventListener("click", () => {
     state.logs = [];
+    state.edgeData = {};
     saveLogs();
     renderLogs();
+    selectEdge("user>terminal");
   });
-  $("#inputs").addEventListener("submit", (event) => event.preventDefault());
+  $("#exportLogs").addEventListener("click", exportLogs);
+  $("#scenario4f").addEventListener("click", () => setScenario("4f"));
+  $("#scenarioLee").addEventListener("click", () => setScenario("lee"));
+  $("#scenarioCollege").addEventListener("click", () => setScenario("college"));
 
-  els.imageFile.addEventListener("change", (event) => {
-    setImage(event.target.files[0]);
-  });
+  els.imageFile.addEventListener("change", (event) => setImage(event.target.files[0]));
   ["dragenter", "dragover"].forEach((eventName) => {
     els.dropZone.addEventListener(eventName, (event) => {
       event.preventDefault();
@@ -587,25 +725,52 @@ function bindEvents() {
     setImage(event.dataTransfer.files[0]);
   });
 
-  $$(".tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      $$(".tab").forEach((item) => item.classList.remove("active"));
-      tab.classList.add("active");
-      const target = tab.dataset.tab;
-      els.payloadView.classList.toggle("hidden", target !== "payload");
-      els.responseView.classList.toggle("hidden", target !== "response");
-      els.routeSteps.classList.toggle("hidden", target !== "route");
+  $$(".edge").forEach((edge) => {
+    edge.addEventListener("click", () => selectEdge(edge.dataset.edge));
+  });
+  $$(".module-node").forEach((node) => {
+    node.addEventListener("click", () => {
+      const module = node.dataset.module;
+      if (!state.selectedModule) {
+        state.selectedModule = module;
+        $$(".module-node").forEach((item) => item.classList.remove("selected"));
+        node.classList.add("selected");
+        return;
+      }
+      const forward = `${state.selectedModule}>${module}`;
+      const backward = `${module}>${state.selectedModule}`;
+      if (connections[forward]) selectEdge(forward);
+      else if (connections[backward]) selectEdge(backward);
+      else {
+        $$(".module-node").forEach((item) => item.classList.remove("selected"));
+        node.classList.add("selected");
+      }
+      state.selectedModule = module;
     });
+  });
+
+  ["fromLocation", "toLocation", "utterance"].forEach((id) => {
+    $(`#${id}`).addEventListener("input", updateStats);
   });
 }
 
 function init() {
+  Object.keys(connections).forEach((edgeKey) => {
+    state.edgeData[edgeKey] = {
+      method: "LOCAL",
+      status: "pending",
+      payload: { edge: edgeKey },
+      response: { message: "等待运行流程。" },
+    };
+  });
   bindEvents();
-  updateInspector();
-  renderRouteSteps([]);
   renderLogs();
+  renderRouteSteps([]);
+  selectEdge("user>terminal");
+  updateStats();
   checkHealth();
   loadPlaces();
+  loadContext();
 }
 
 init();
