@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import heapq
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -21,12 +22,77 @@ class RouteResult:
     from_id: str
     to_id: str
     total_distance_m: float
+    announcement: str
     steps: list[RouteStep]
 
 
 class Navigator:
     def __init__(self, repository: GuideRepository) -> None:
         self.repository = repository
+
+    @staticmethod
+    def _floor_name(floor: int, language: str) -> str:
+        if language == "en":
+            return f"Floor {floor}"
+        numerals = {1: "一", 2: "二", 3: "三", 4: "四"}
+        return f"{numerals.get(floor, floor)}楼"
+
+    def _destination_name(self, node: dict[str, Any], language: str) -> str:
+        if language == "en":
+            return str(node.get("name_en") or node["id"])
+        node_id = str(node["id"])
+        if node_id == "LB-4F-REGION-F":
+            return "学院介绍区域"
+        room = re.search(r"-ROOM-([A-Z0-9]+)$", node_id)
+        if node_id == "LB-3F-ROOM-300" and room:
+            return f"{room.group(1)}会议室"
+        return str(node.get("name_zh") or node_id)
+
+    def _announcement(self, start: str, destination: str, language: str) -> str:
+        start_node = self.repository.data.nodes[start]
+        destination_node = self.repository.data.nodes[destination]
+        start_floor = int(start_node["floor"])
+        destination_floor = int(destination_node["floor"])
+        destination_name = self._destination_name(destination_node, language)
+
+        if language == "en":
+            if start == destination:
+                return f"You are already at {destination_name}."
+            if start_floor == destination_floor:
+                if destination == "LB-3F-ROOM-300":
+                    return (
+                        f"{destination_name} is on your current floor, "
+                        "near the elevator exit."
+                    )
+                return f"{destination_name} is on your current floor."
+            if destination == "LB-4F-REGION-F":
+                return (
+                    "The college introduction area is on Floor 4. Take the guest "
+                    "elevator to Floor 4, turn right after exiting, then right again; "
+                    "the college introduction is on your left."
+                )
+            return (
+                f"{destination_name} is on {self._floor_name(destination_floor, language)}. "
+                f"Take the guest elevator to {self._floor_name(destination_floor, language)} "
+                "and follow the guidance after exiting."
+            )
+
+        floor_name = self._floor_name(destination_floor, language)
+        if start == destination:
+            return f"您已在{destination_name}。"
+        if start_floor == destination_floor:
+            if destination == "LB-3F-ROOM-300":
+                return f"{destination_name}就在您所在的{floor_name}，位于电梯出口附近。"
+            return f"{destination_name}就在您所在的{floor_name}。"
+        if destination == "LB-4F-REGION-F":
+            return (
+                "学院介绍区域在四楼。请乘坐访客电梯到四楼，出电梯后右转，"
+                "再右转，学院介绍在左侧。"
+            )
+        return (
+            f"{destination_name}在{floor_name}。请乘坐访客电梯到{floor_name}，"
+            "出电梯后按指引前往。"
+        )
 
     def _instruction(
         self,
@@ -60,7 +126,13 @@ class Navigator:
         start = self.repository.resolve_location(start_value)
         destination = self.repository.resolve_location(destination_value)
         if start == destination:
-            return RouteResult(start, destination, 0, [])
+            return RouteResult(
+                start,
+                destination,
+                0,
+                self._announcement(start, destination, language),
+                [],
+            )
 
         adjacency: dict[str, list[tuple[str, dict[str, Any]]]] = {
             node_id: [] for node_id in self.repository.data.nodes
@@ -114,4 +186,10 @@ class Navigator:
             )
             for segment_start, segment_end, edge in reversed_segments
         ]
-        return RouteResult(start, destination, distances[destination], steps)
+        return RouteResult(
+            start,
+            destination,
+            distances[destination],
+            self._announcement(start, destination, language),
+            steps,
+        )

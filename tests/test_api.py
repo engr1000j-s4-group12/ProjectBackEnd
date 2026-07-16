@@ -86,6 +86,8 @@ async def test_route(client: httpx.AsyncClient) -> None:
     assert len(body["steps"]) > 1
     assert body["from_id"] == "LB-4F-ROOM-400A"
     assert body["to_id"] == "LB-4F-ROOM-429B"
+    assert "您所在的四楼" in body["announcement"]
+    assert "OPEN" not in body["announcement"]
 
 
 @pytest.mark.anyio
@@ -105,5 +107,47 @@ async def test_exhibit_context_is_grounded(client: httpx.AsyncClient) -> None:
     )
     assert response.status_code == 200
     body = response.json()
+    assert body["summary"]
     assert body["facts"]
     assert "只能依据" in body["system_instruction"]
+
+
+@pytest.mark.anyio
+async def test_resolve_place_accepts_firmware_name_parameter(
+    client: httpx.AsyncClient,
+) -> None:
+    response = await client.get("/api/v1/resolve", params={"name": "400A房间"})
+    assert response.status_code == 200
+    assert response.json() == {"node_id": "LB-4F-ROOM-400A"}
+
+
+@pytest.mark.anyio
+async def test_resolve_exhibit_for_mcp(client: httpx.AsyncClient) -> None:
+    response = await client.post(
+        "/api/v1/exhibits/resolve",
+        json={"recognized_texts": ["机器人技术示范展品"], "floor_hint": 4},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "matched"
+    assert body["exhibit_id"] == "ROBOT-001"
+    assert body["location_id"] == "LB-4F-ROOM-400"
+
+
+@pytest.mark.anyio
+async def test_resolve_exhibit_context_for_mcp(client: httpx.AsyncClient) -> None:
+    response = await client.post(
+        "/api/v1/exhibits/resolve-context",
+        json={
+            "recognized_texts": ["机器人技术示范展品"],
+            "floor_hint": 4,
+            "question": "请简要介绍它",
+            "language": "zh",
+        },
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "matched"
+    assert body["exhibit_id"] == "ROBOT-001"
+    assert body["summary"]
+    assert body["facts"]

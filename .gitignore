@@ -6,6 +6,9 @@ __pycache__/
 .coverage
 htmlcov/
 .env
+runtime/*
+!runtime/.gitkeep
+output/
 
 # ESP-IDF / CMake build output
 **/build/

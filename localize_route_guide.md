@@ -247,6 +247,7 @@ Content-Type: application/json
   "from_id": "LB-4F-ROOM-400A",
   "to_id": "LB-4F-ROOM-429B",
   "total_distance_m": 127.3,
+  "announcement": "429B房间就在您所在的四楼。",
   "steps": [
     {
       "from_id": "LB-4F-ROOM-400A",
@@ -275,11 +276,12 @@ Content-Type: application/json
 | `from_id` | 解析后的起点 ID |
 | `to_id` | 解析后的终点 ID |
 | `total_distance_m` | 总距离（米） |
-| `steps` | 分段导航步骤，**设备应逐段交给 TTS 播报** |
+| `announcement` | 面向来宾的最终播报，设备交给 TTS |
+| `steps` | 后台重新定位和调试使用的完整分段，不逐段播报 |
 | `steps[].from_id` | 本段起点 |
 | `steps[].to_id` | 本段终点 |
 | `steps[].distance_m` | 本段距离（米） |
-| `steps[].instruction` | 可直接用于 TTS 的文本 |
+| `steps[].instruction` | 后台分段说明 |
 
 **起点 = 终点** 时：`total_distance_m = 0`，`steps = []`。
 
@@ -295,7 +297,7 @@ Content-Type: application/json
 | 情况 | 处理方式 |
 |------|----------|
 | `total_distance_m == 0` | 提示用户"您已在目的地" |
-| `steps` 非空 | 逐段播报 `instruction`；可先报总距离再逐段引导 |
+| `announcement` 非空 | 只播报 `announcement`；移动后重新定位并重新规划 |
 | `404` | 提示"该地点暂未录入系统" |
 | `422` | 提示"无法到达，请尝试关闭无障碍模式或选择其他目的地" |
 
@@ -368,7 +370,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/route \
       ↓
 5. 确认目的地 → POST /api/v1/route
       ↓
-6. 收到 steps → 逐段 TTS 播报
+6. 收到 announcement → 直接交给 TTS；移动后重新拍照定位
 ```
 
 **方案 C（兜底）**：若视觉定位失败，提示用户到最近的二维码标记处，调用：

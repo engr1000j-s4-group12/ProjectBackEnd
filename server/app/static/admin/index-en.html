@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Longbin Building Guide Content Management</title>
+    <link rel="stylesheet" href="/admin/static/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">GC</span>
+        <div><strong>Guide Console</strong><small>Longbin Building CMS</small></div>
+      </div>
+      <nav>
+        <a href="#maps">Floor Maps</a>
+        <a href="#entryForm">Add Content</a>
+        <a href="#records">Content Records</a>
+        <a href="#visits">Delegation Missions</a>
+        <a href="/docs">API Documentation</a>
+        <a href="/admin" lang="zh-CN">中文管理端</a>
+      </nav>
+      <div class="sidebar-foot">Local console · Save to publish</div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Global College · Longbin Building</p>
+          <h1>Guide Database Console</h1>
+          <p class="subtitle">Map spaces, upload on-site materials, and publish structured content for Guide.</p>
+        </div>
+        <div class="header-actions">
+          <span id="healthBadge" class="badge muted">Checking backend</span>
+          <button id="reloadButton" class="button" type="button">Refresh</button>
+          <button id="drawButton" class="button primary" type="button">Draw new region</button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Database overview">
+        <article><span>Active content</span><strong id="activeCount">—</strong></article>
+        <article><span>Temporary events</span><strong id="eventCount">—</strong></article>
+        <article><span>Archived</span><strong id="archivedCount">—</strong></article>
+        <article><span>Active visit missions</span><strong id="visitCount">—</strong></article>
+      </section>
+
+      <section id="maps" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Spatial editor</p>
+            <h2>Four Floor Maps and Exhibition Areas</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot permanent"></i>Permanent information</span>
+            <span><i class="dot event"></i>Event</span>
+            <span><i class="dot exhibit"></i>Permanent exhibit</span>
+            <span><i class="dot facility"></i>Facility</span>
+          </div>
+        </div>
+        <div id="drawHint" class="notice hidden">Drawing mode is active. Press and drag on a floor map to outline an exhibition or information area.</div>
+        <div id="mapGrid" class="map-grid" aria-live="polite">
+          <article class="map-card" data-floor="1"><header><strong>Floor 1</strong><span>Loading regions</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-1f-node-worksheet.png" alt="Floor 1 plan" /><canvas data-floor="1"></canvas></div></article>
+          <article class="map-card" data-floor="2"><header><strong>Floor 2</strong><span>Loading regions</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-2f-node-worksheet.png" alt="Floor 2 plan" /><canvas data-floor="2"></canvas></div></article>
+          <article class="map-card" data-floor="3"><header><strong>Floor 3</strong><span>Loading regions</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-3f-node-worksheet.png" alt="Floor 3 plan" /><canvas data-floor="3"></canvas></div></article>
+          <article class="map-card" data-floor="4"><header><strong>Floor 4</strong><span>Loading regions</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-4f-node-worksheet.png" alt="Floor 4 plan" /><canvas data-floor="4"></canvas></div></article>
+        </div>
+      </section>
+
+      <section class="editor-grid">
+        <form id="entryForm" class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Publish content</p>
+              <h2 id="formTitle">Add Spatial Content</h2>
+            </div>
+            <button id="resetForm" class="text-button" type="button">Clear</button>
+          </div>
+
+          <input id="geometry" type="hidden" />
+          <div class="two-col">
+            <label><span>Floor</span><select id="floor" required><option value="1">Floor 1</option><option value="2">Floor 2</option><option value="3">Floor 3</option><option value="4">Floor 4</option></select></label>
+            <label><span>Area code</span><input id="groupCode" placeholder="For example: A, C, or F" /></label>
+          </div>
+          <label><span>Node ID</span><input id="nodeId" required placeholder="Draw a region or enter LB-1F-REGION-A" /></label>
+          <label><span>Content type</span><select id="kind" required><option value="permanent">Permanent information</option><option value="event">Event / temporary exhibition</option><option value="exhibit">Permanent exhibit</option><option value="facility">Facility</option></select></label>
+          <label><span>Chinese title</span><input id="titleZh" required /></label>
+          <label><span>English title</span><input id="titleEn" /></label>
+          <label><span>Chinese reference content</span><textarea id="contentZh" rows="5" placeholder="Verified facts, interpretation points, or event details"></textarea></label>
+          <label><span>English reference content</span><textarea id="contentEn" rows="4" placeholder="May be left blank for VLM-assisted preprocessing"></textarea></label>
+          <label><span>Tags</span><input id="tags" placeholder="Comma-separated, e.g. college history, anniversary exhibition" /></label>
+          <label><span>Information source</span><input id="source" placeholder="On-site panel, college website, or manager entry" /></label>
+          <label class="upload-field">
+            <span>On-site images and attachments</span>
+            <input id="files" type="file" multiple accept="image/*,.pdf,.xlsx,.docx,.csv,.json,.txt" />
+            <small>Maximum 20 MiB per file. Images are processed once by VLM to extract text, appearance, and location tags.</small>
+          </label>
+          <div class="form-actions">
+            <button id="saveEntry" class="button primary" type="submit">Save and publish</button>
+            <span id="formStatus" class="form-status"></span>
+          </div>
+        </form>
+
+        <section id="records" class="panel records-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Database</p><h2>Published Content</h2></div>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="Search title, node, or content" />
+              <select id="statusFilter"><option value="all">All statuses</option><option value="active">Active only</option><option value="archived">Archived only</option></select>
+            </div>
+          </div>
+          <div id="recordList" class="record-list"></div>
+        </section>
+      </section>
+
+      <section id="visits" class="section visit-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">Delegation mission</p><h2>Delegation Visit Missions</h2></div>
+        </div>
+        <div class="visit-grid">
+          <form id="visitForm" class="panel compact-form">
+            <label><span>Delegation name</span><input id="delegationName" required placeholder="Delegation from University A" /></label>
+            <div class="two-col">
+              <label><span>Institution</span><input id="institution" /></label>
+              <label><span>Country/region</span><input id="country" /></label>
+            </div>
+            <label><span>Guide language</span><select id="preferredLanguage"><option value="en">English</option><option value="zh">Chinese</option></select></label>
+            <label><span>Purpose of visit</span><textarea id="purpose" rows="3"></textarea></label>
+            <label><span>Itinerary (one item per line)</span><textarea id="itinerary" rows="4" placeholder="09:00 Collect devices and visit Floor 1&#10;10:00 Proceed to Meeting Room 300"></textarea></label>
+            <label><span>Preset Chinese narration</span><textarea id="scriptZh" rows="4"></textarea></label>
+            <label><span>Preset English narration</span><textarea id="scriptEn" rows="4"></textarea></label>
+            <button class="button primary" type="submit">Create visit mission</button>
+          </form>
+          <div id="visitList" class="visit-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script src="/admin/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+services:
+  guide:
+    build: .
+    image: longbin-guide:1.0.0
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8000}:8000"
+    volumes:
+      - guide_runtime:/app/runtime
+
+volumes:
+  guide_runtime:

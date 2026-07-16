@@ -1,0 +1,70 @@
+{
+  "source": "output/longbin-1f-4f-node-route.pdf",
+  "meaning": "green lines are walkable areas",
+  "calibration_status": "user_marked",
+  "notes": [
+    "Green lines through the central stairs are retained for later inter-floor modelling and are not used as same-floor shortcuts.",
+    "Internal PATH nodes preserve bends in the user's green lines so route overlays do not cross walls."
+  ],
+  "path_nodes": [
+    ["LB-1F-PATH-NORTHWEST", 1, 0.35, 0.20],
+    ["LB-1F-PATH-NORTHEAST", 1, 0.62, 0.20],
+    ["LB-1F-PATH-SOUTHWEST", 1, 0.35, 0.82],
+    ["LB-1F-PATH-SOUTHEAST", 1, 0.62, 0.82],
+    ["LB-2F-PATH-NORTHWEST", 2, 0.38, 0.18],
+    ["LB-2F-PATH-NORTHEAST", 2, 0.61, 0.18],
+    ["LB-2F-PATH-SOUTHWEST", 2, 0.38, 0.76],
+    ["LB-2F-PATH-SOUTHEAST", 2, 0.61, 0.76],
+    ["LB-3F-PATH-NORTHWEST", 3, 0.36, 0.20],
+    ["LB-3F-PATH-NORTHEAST", 3, 0.64, 0.20],
+    ["LB-3F-PATH-SOUTHWEST", 3, 0.37, 0.72],
+    ["LB-3F-PATH-SOUTHEAST", 3, 0.64, 0.72]
+  ],
+  "node_positions": {
+    "LB-3F-ROOM-300": [0.49, 0.84]
+  },
+  "edges": [
+    ["LB-1F-OPEN-02", "LB-1F-PATH-NORTHWEST"],
+    ["LB-1F-OPEN-01", "LB-1F-PATH-NORTHWEST"],
+    ["LB-1F-OPEN-01", "LB-1F-PATH-NORTHEAST"],
+    ["LB-1F-OPEN-03", "LB-1F-PATH-NORTHEAST"],
+    ["LB-1F-PATH-NORTHWEST", "LB-1F-PATH-SOUTHWEST"],
+    ["LB-1F-PATH-NORTHEAST", "LB-1F-PATH-SOUTHEAST"],
+    ["LB-1F-OPEN-05", "LB-1F-PATH-SOUTHWEST"],
+    ["LB-1F-OPEN-07", "LB-1F-PATH-SOUTHWEST"],
+    ["LB-1F-PATH-SOUTHWEST", "LB-1F-OPEN-08"],
+    ["LB-1F-OPEN-08", "LB-1F-PATH-SOUTHEAST"],
+    ["LB-1F-OPEN-06", "LB-1F-PATH-SOUTHEAST"],
+
+    ["LB-2F-OPEN-01", "LB-2F-PATH-NORTHWEST"],
+    ["LB-2F-OPEN-02", "LB-2F-PATH-NORTHWEST"],
+    ["LB-2F-OPEN-02", "LB-2F-PATH-NORTHEAST"],
+    ["LB-2F-OPEN-03", "LB-2F-PATH-NORTHEAST"],
+    ["LB-2F-PATH-NORTHWEST", "LB-2F-OPEN-04"],
+    ["LB-2F-OPEN-04", "LB-2F-OPEN-06"],
+    ["LB-2F-OPEN-06", "LB-2F-PATH-SOUTHWEST"],
+    ["LB-2F-OPEN-06-SOUTH", "LB-2F-PATH-SOUTHWEST"],
+    ["LB-2F-PATH-SOUTHWEST", "LB-2F-OPEN-08"],
+    ["LB-2F-OPEN-08", "LB-2F-PATH-SOUTHEAST"],
+    ["LB-2F-OPEN-10", "LB-2F-PATH-SOUTHEAST"],
+    ["LB-2F-PATH-NORTHEAST", "LB-2F-OPEN-09"],
+    ["LB-2F-OPEN-09", "LB-2F-OPEN-10"],
+
+    ["LB-3F-OPEN-01", "LB-3F-PATH-NORTHWEST"],
+    ["LB-3F-OPEN-02", "LB-3F-PATH-NORTHWEST"],
+    ["LB-3F-OPEN-02", "LB-3F-PATH-NORTHEAST"],
+    ["LB-3F-OPEN-03", "LB-3F-PATH-NORTHEAST"],
+    ["LB-3F-PATH-NORTHWEST", "LB-3F-OPEN-310H-OPPOSITE"],
+    ["LB-3F-OPEN-310H-OPPOSITE", "LB-3F-OPEN-04"],
+    ["LB-3F-OPEN-04", "LB-3F-PATH-SOUTHWEST"],
+    ["LB-3F-PATH-SOUTHWEST", "LB-3F-OPEN-07"],
+    ["LB-3F-OPEN-06", "LB-3F-OPEN-08"],
+    ["LB-3F-OPEN-08", "LB-3F-PATH-SOUTHWEST"],
+    ["LB-3F-OPEN-07", "LB-3F-PATH-SOUTHEAST"],
+    ["LB-3F-PATH-NORTHEAST", "LB-3F-OPEN-09"],
+    ["LB-3F-OPEN-09", "LB-3F-PATH-SOUTHEAST"],
+    ["LB-3F-PATH-SOUTHEAST", "LB-3F-OPEN-10"],
+    ["LB-3F-EVENT-LEE-ART", "LB-3F-OPEN-02"],
+    ["LB-3F-OPEN-07", "LB-3F-ROOM-300"]
+  ]
+}

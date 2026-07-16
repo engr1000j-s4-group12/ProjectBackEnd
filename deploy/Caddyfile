@@ -1,0 +1,4 @@
+{$GUIDE_DOMAIN} {
+    encode zstd gzip
+    reverse_proxy guide:8000
+}

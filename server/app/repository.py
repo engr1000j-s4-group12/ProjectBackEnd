@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .errors import DataValidationError, LocationNotFoundError
+from .knowledge import KnowledgeStore
 
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[2] / "data"
@@ -208,3 +209,81 @@ class GuideRepository:
 
     def list_exhibits(self) -> list[dict[str, Any]]:
         return sorted(self.data.exhibits.values(), key=lambda exhibit: exhibit["id"])
+
+
+class SqliteGuideRepository(GuideRepository):
+    """Navigation repository backed by the map tables in guide.sqlite3."""
+
+    def __init__(
+        self,
+        store: KnowledgeStore,
+        data_dir: str | Path | None = None,
+    ) -> None:
+        self.store = store
+        self.data_dir = Path(data_dir or DEFAULT_DATA_DIR)
+        self.data = self._load_from_sqlite()
+        self._aliases = self._build_alias_index()
+
+    def refresh(self) -> None:
+        self.data = self._load_from_sqlite()
+        self._aliases = self._build_alias_index()
+
+    def resolve_location(self, value: str) -> str:
+        self.refresh()
+        return super().resolve_location(value)
+
+    def list_locations(self) -> list[dict[str, Any]]:
+        self.refresh()
+        return super().list_locations()
+
+    def get_exhibit(self, exhibit_id: str) -> dict[str, Any]:
+        self.refresh()
+        return super().get_exhibit(exhibit_id)
+
+    def list_exhibits(self) -> list[dict[str, Any]]:
+        self.refresh()
+        return super().list_exhibits()
+
+    def _load_from_sqlite(self) -> GuideData:
+        node_index: dict[str, dict[str, Any]] = {}
+        for item in self.store.list_map_nodes(include_archived=False):
+            node = {
+                "id": item["node_id"],
+                "name_zh": item["name_zh"],
+                "name_en": item["name_en"] or item["name_zh"],
+                "floor": item["floor"],
+                "kind": item["kind"],
+                "aliases": item["aliases"],
+                "visual_landmarks": item["visual_landmarks"],
+                "position": {
+                    "x_ratio": item["x_norm"],
+                    "y_ratio": item["y_norm"],
+                    "estimated": item["calibration_status"] != "calibrated",
+                },
+                "source": item["map_source"],
+                "navigation_notes": item["navigation_notes"],
+                "calibration_status": item["calibration_status"],
+                "routable": item["routable"],
+            }
+            self._validate_node(node, node_index)
+
+        edges: list[dict[str, Any]] = []
+        for item in self.store.list_map_edges(include_archived=False):
+            if item["distance_m"] is None:
+                continue
+            edge = {
+                "from": item["from_node_id"],
+                "to": item["to_node_id"],
+                "distance_m": item["distance_m"],
+                "bidirectional": item["bidirectional"],
+                "accessible": item["accessible"],
+                "instructions": item["instructions"],
+            }
+            self._validate_edge(edge, node_index)
+            edges.append(edge)
+
+        exhibit_data = self._read_json("exhibits.json")
+        exhibit_index: dict[str, dict[str, Any]] = {}
+        for exhibit in exhibit_data.get("exhibits", []):
+            self._validate_exhibit(exhibit, exhibit_index, node_index)
+        return GuideData(nodes=node_index, edges=edges, exhibits=exhibit_index)

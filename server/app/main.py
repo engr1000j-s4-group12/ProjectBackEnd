@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from .admin_api import build_data_router
+from .device_api import build_device_router
 from .errors import (
     DataValidationError,
     LocationNotFoundError,
@@ -14,10 +17,16 @@ from .errors import (
     VlmResponseError,
 )
 from .navigation import Navigator
-from .repository import GuideRepository
+from .knowledge import KnowledgeStore
+from .mcp_api import build_mcp_router
+from .repository import GuideRepository, SqliteGuideRepository
+from .security import AccessControlMiddleware
 from .schemas import (
     ExhibitContextResponse,
     ExhibitQuestionRequest,
+    ExhibitResolveContextRequest,
+    ExhibitResolveContextResponse,
+    ExhibitResolveResponse,
     HealthResponse,
     LocalizeRequest,
     LocationResponse,
@@ -33,27 +42,59 @@ from .vlm import VlmClient
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 FLOW_LAB_DIR = Path(__file__).resolve().parent / "static" / "flow_lab"
+ADMIN_DIR = Path(__file__).resolve().parent / "static" / "admin"
+DEFAULT_UPLOAD_DIR = ADMIN_DIR / "uploads"
 
 
-def create_app(repository: GuideRepository | None = None) -> FastAPI:
-    repo = repository or GuideRepository()
+def create_app(
+    repository: GuideRepository | None = None,
+    knowledge_store: KnowledgeStore | None = None,
+) -> FastAPI:
+    store = knowledge_store or KnowledgeStore()
+    repo = repository or SqliteGuideRepository(store)
     navigator = Navigator(repo)
     visual_localizer = VisualLocalizer(repo)
     vlm_client = VlmClient()
+    upload_dir = Path(os.getenv("GUIDE_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
+    upload_dir.mkdir(parents=True, exist_ok=True)
     app = FastAPI(
         title="龙宾楼智能导览后端",
         description="为小智 ESP32 终端提供定位、路线规划和展品知识查询。",
-        version="0.2.0",
+        version="1.0.0",
     )
+    app.add_middleware(AccessControlMiddleware)
     app.mount(
         "/flow/static",
         StaticFiles(directory=FLOW_LAB_DIR),
         name="flow_lab_static",
     )
+    app.mount(
+        "/admin/static",
+        StaticFiles(directory=ADMIN_DIR),
+        name="admin_static",
+    )
+    app.mount(
+        "/admin/uploads",
+        StaticFiles(directory=upload_dir),
+        name="admin_uploads",
+    )
+    app.include_router(build_data_router(store, vlm_client, upload_dir))
+    app.include_router(build_mcp_router(store, navigator))
+    app.include_router(
+        build_device_router(store, repo, navigator, visual_localizer, vlm_client)
+    )
 
     @app.get("/flow", include_in_schema=False)
     async def flow_lab() -> FileResponse:
         return FileResponse(FLOW_LAB_DIR / "index.html")
+
+    @app.get("/admin", include_in_schema=False)
+    async def admin_console() -> FileResponse:
+        return FileResponse(ADMIN_DIR / "index.html")
+
+    @app.get("/admin/en", include_in_schema=False)
+    async def admin_console_en() -> FileResponse:
+        return FileResponse(ADMIN_DIR / "index-en.html")
 
     @app.get("/health", response_model=HealthResponse, tags=["system"])
     async def health() -> HealthResponse:
@@ -141,12 +182,75 @@ def create_app(repository: GuideRepository | None = None) -> FastAPI:
             from_id=result.from_id,
             to_id=result.to_id,
             total_distance_m=result.total_distance_m,
+            announcement=result.announcement,
             steps=[step.__dict__ for step in result.steps],
         )
 
     @app.get("/api/v1/exhibits", tags=["exhibits"])
     async def list_exhibits() -> dict[str, list[dict]]:
         return {"exhibits": repo.list_exhibits()}
+
+    @app.post(
+        "/api/v1/exhibits/resolve",
+        response_model=ExhibitResolveResponse,
+        tags=["exhibits"],
+    )
+    async def resolve_exhibit(
+        request: VisualLocalizeRequest,
+    ) -> ExhibitResolveResponse:
+        return visual_localizer.resolve_exhibit(request)
+
+    @app.post(
+        "/api/v1/exhibits/resolve-context",
+        response_model=ExhibitResolveContextResponse,
+        tags=["exhibits"],
+    )
+    async def resolve_exhibit_context(
+        request: ExhibitResolveContextRequest,
+    ) -> ExhibitResolveContextResponse:
+        evidence = VisualLocalizeRequest(
+            objects=request.objects,
+            recognized_texts=request.recognized_texts,
+            scene_description=request.scene_description,
+            floor_hint=request.floor_hint,
+        )
+        resolved = visual_localizer.resolve_exhibit(evidence)
+        if resolved.status != "matched" or resolved.exhibit_id is None:
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "status": resolved.status,
+                    "confidence": resolved.confidence,
+                    "needs_confirmation": resolved.needs_confirmation,
+                    "candidates": [candidate.model_dump() for candidate in resolved.candidates],
+                },
+            )
+
+        exhibit = repo.get_exhibit(resolved.exhibit_id)
+        suffix = "en" if request.language == "en" else "zh"
+        matched_features = (
+            resolved.candidates[0].matched_features if resolved.candidates else []
+        )
+        return ExhibitResolveContextResponse(
+            status="matched",
+            exhibit_id=exhibit["id"],
+            location_id=exhibit["location_id"],
+            confidence=resolved.confidence,
+            needs_confirmation=resolved.needs_confirmation,
+            matched_features=matched_features,
+            candidates=resolved.candidates,
+            evidence=evidence,
+            name=exhibit[f"name_{suffix}"],
+            summary=exhibit[f"summary_{suffix}"],
+            facts=exhibit[f"facts_{suffix}"],
+            question=request.question,
+            system_instruction=(
+                "Answer only from the supplied exhibit name, summary, and facts. "
+                "If they are insufficient, say that the curated exhibit data does not contain the answer."
+                if request.language == "en"
+                else "只能依据提供的展品名称、摘要和事实回答。如果资料不足，明确说明展品资料中没有该信息。"
+            ),
+        )
 
     @app.get("/api/v1/exhibits/{exhibit_id}", tags=["exhibits"])
     async def get_exhibit(exhibit_id: str) -> dict:
@@ -173,6 +277,7 @@ def create_app(repository: GuideRepository | None = None) -> FastAPI:
             exhibit_id=exhibit["id"],
             location_id=exhibit["location_id"],
             name=exhibit[f"name_{suffix}"],
+            summary=exhibit[f"summary_{suffix}"],
             facts=exhibit[f"facts_{suffix}"],
             question=request.question,
             system_instruction=(
@@ -184,9 +289,15 @@ def create_app(repository: GuideRepository | None = None) -> FastAPI:
         )
 
     @app.get("/api/v1/resolve", tags=["places"])
-    async def resolve_place(q: str = Query(min_length=1)) -> dict[str, str]:
+    async def resolve_place(
+        q: str | None = Query(default=None, min_length=1),
+        name: str | None = Query(default=None, min_length=1),
+    ) -> dict[str, str]:
+        value = q or name
+        if value is None:
+            raise HTTPException(status_code=422, detail="需要查询参数 q 或 name")
         try:
-            return {"node_id": repo.resolve_location(q)}
+            return {"node_id": repo.resolve_location(value)}
         except LocationNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 

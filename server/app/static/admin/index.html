@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>龙宾楼导览内容管理</title>
+    <link rel="stylesheet" href="/admin/static/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">GC</span>
+        <div><strong>Guide Console</strong><small>龙宾楼导览内容管理</small></div>
+      </div>
+      <nav>
+        <a href="#maps">楼层地图</a>
+        <a href="#entryForm">内容录入</a>
+        <a href="#records">内容记录</a>
+        <a href="#visits">代表团任务</a>
+        <a href="/docs">API 文档</a>
+        <a href="/admin/en" lang="en">English Console</a>
+      </nav>
+      <div class="sidebar-foot">本地管理端 · 保存即发布</div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Global College · Longbin Building</p>
+          <h1>导览数据库管理台</h1>
+          <p class="subtitle">圈选空间、上传现场资料，并生成可供 Guide 查询的结构化内容。</p>
+        </div>
+        <div class="header-actions">
+          <span id="healthBadge" class="badge muted">后端检查中</span>
+          <button id="reloadButton" class="button" type="button">刷新数据</button>
+          <button id="drawButton" class="button primary" type="button">圈选新区域</button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="数据概览">
+        <article><span>有效内容</span><strong id="activeCount">—</strong></article>
+        <article><span>临时活动</span><strong id="eventCount">—</strong></article>
+        <article><span>已归档</span><strong id="archivedCount">—</strong></article>
+        <article><span>活跃接待任务</span><strong id="visitCount">—</strong></article>
+      </section>
+
+      <section id="maps" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Spatial editor</p>
+            <h2>四层地图与展区</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot permanent"></i>长期信息</span>
+            <span><i class="dot event"></i>活动</span>
+            <span><i class="dot exhibit"></i>常设展品</span>
+            <span><i class="dot facility"></i>设施</span>
+          </div>
+        </div>
+        <div id="drawHint" class="notice hidden">圈选模式已开启：在任意楼层图上按住并拖动，圈出展览或信息覆盖范围。</div>
+        <div id="mapGrid" class="map-grid" aria-live="polite">
+          <article class="map-card" data-floor="1"><header><strong>1楼平面图</strong><span>加载区域中</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-1f-node-worksheet.png" alt="1楼平面图" /><canvas data-floor="1"></canvas></div></article>
+          <article class="map-card" data-floor="2"><header><strong>2楼平面图</strong><span>加载区域中</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-2f-node-worksheet.png" alt="2楼平面图" /><canvas data-floor="2"></canvas></div></article>
+          <article class="map-card" data-floor="3"><header><strong>3楼平面图</strong><span>加载区域中</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-3f-node-worksheet.png" alt="3楼平面图" /><canvas data-floor="3"></canvas></div></article>
+          <article class="map-card" data-floor="4"><header><strong>4楼平面图</strong><span>加载区域中</span></header><div class="map-stage"><img src="/admin/static/maps/longbin-4f-node-worksheet.png" alt="4楼平面图" /><canvas data-floor="4"></canvas></div></article>
+        </div>
+      </section>
+
+      <section class="editor-grid">
+        <form id="entryForm" class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Publish content</p>
+              <h2 id="formTitle">新增空间内容</h2>
+            </div>
+            <button id="resetForm" class="text-button" type="button">清空</button>
+          </div>
+
+          <input id="geometry" type="hidden" />
+          <div class="two-col">
+            <label><span>楼层</span><select id="floor" required><option value="1">1楼</option><option value="2">2楼</option><option value="3">3楼</option><option value="4">4楼</option></select></label>
+            <label><span>区域代号</span><input id="groupCode" placeholder="例如 A、C、F" /></label>
+          </div>
+          <label><span>节点 ID</span><input id="nodeId" required placeholder="请先圈选，或输入 LB-1F-REGION-A" /></label>
+          <label><span>内容类型</span><select id="kind" required><option value="permanent">长期信息</option><option value="event">活动 / 临时展览</option><option value="exhibit">常设展品</option><option value="facility">设施</option></select></label>
+          <label><span>中文标题</span><input id="titleZh" required /></label>
+          <label><span>英文标题</span><input id="titleEn" /></label>
+          <label><span>中文参考信息</span><textarea id="contentZh" rows="5" placeholder="管理员提供的事实、讲解重点或活动说明"></textarea></label>
+          <label><span>英文参考信息</span><textarea id="contentEn" rows="4" placeholder="可留空，图片预处理时由 VLM 生成"></textarea></label>
+          <label><span>标签</span><input id="tags" placeholder="用逗号分隔，例如 学院历史,建校展" /></label>
+          <label><span>信息来源</span><input id="source" placeholder="现场展板、学院官网或管理者录入" /></label>
+          <label class="upload-field">
+            <span>现场图片与附件</span>
+            <input id="files" type="file" multiple accept="image/*,.pdf,.xlsx,.docx,.csv,.json,.txt" />
+            <small>每个文件不超过20 MiB。图片保存后自动调用一次 VLM，提取文字、外观和定位标签。</small>
+          </label>
+          <div class="form-actions">
+            <button id="saveEntry" class="button primary" type="submit">保存并发布</button>
+            <span id="formStatus" class="form-status"></span>
+          </div>
+        </form>
+
+        <section id="records" class="panel records-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Database</p><h2>已录入内容</h2></div>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="搜索标题、节点或内容" />
+              <select id="statusFilter"><option value="all">全部状态</option><option value="active">仅有效</option><option value="archived">仅归档</option></select>
+            </div>
+          </div>
+          <div id="recordList" class="record-list"></div>
+        </section>
+      </section>
+
+      <section id="visits" class="section visit-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">Delegation mission</p><h2>代表团来访任务</h2></div>
+        </div>
+        <div class="visit-grid">
+          <form id="visitForm" class="panel compact-form">
+            <label><span>代表团名称</span><input id="delegationName" required placeholder="美国 A 大学代表团" /></label>
+            <div class="two-col">
+              <label><span>机构</span><input id="institution" /></label>
+              <label><span>国家/地区</span><input id="country" /></label>
+            </div>
+            <label><span>导览语言</span><select id="preferredLanguage"><option value="en">English</option><option value="zh">中文</option></select></label>
+            <label><span>来访目的</span><textarea id="purpose" rows="3"></textarea></label>
+            <label><span>行程安排（每行一项）</span><textarea id="itinerary" rows="4" placeholder="09:00 领取设备并参观1楼&#10;10:00 前往300会议室"></textarea></label>
+            <label><span>中文预设播报</span><textarea id="scriptZh" rows="4"></textarea></label>
+            <label><span>英文预设播报</span><textarea id="scriptEn" rows="4"></textarea></label>
+            <button class="button primary" type="submit">创建来访任务</button>
+          </form>
+          <div id="visitList" class="visit-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script src="/admin/static/app.js"></script>
+  </body>
+</html>

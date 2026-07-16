@@ -1,0 +1,43 @@
+{
+  "source": "user correction 2026-07-16",
+  "archive_nodes": [
+    "LB-1F-RESTROOM-NORTHWEST",
+    "LB-1F-ELEVATOR-SOUTHEAST",
+    "LB-2F-ELEVATOR-SOUTH",
+    "LB-3F-PANTRY-SOUTH",
+    "LB-4F-CARGO-ELEVATOR-SOUTHEAST",
+    "LB-4F-ELEVATOR-NORTHWEST"
+  ],
+  "restricted_nodes": [
+    {
+      "node_id": "LB-1F-ELEVATOR-NORTHWEST-RESTRICTED",
+      "floor": 1,
+      "name_zh": "西北侧禁用电梯区域",
+      "name_en": "Restricted northwest elevator area",
+      "geometry": [[0.272, 0.07], [0.307, 0.07], [0.307, 0.18], [0.272, 0.18]],
+      "x_norm": 0.2895,
+      "y_norm": 0.125,
+      "navigation_notes": {
+        "corrected_from": "restroom",
+        "physical_type": "elevator",
+        "guest_access": false,
+        "instruction_zh": "不可进入；不得向来宾推荐此电梯。",
+        "instruction_en": "No entry; never direct guests to this elevator."
+      }
+    }
+  ],
+  "guest_elevators": [
+    ["LB-1F-ELEVATOR-GUEST", 1, 0.64, 0.88],
+    ["LB-2F-ELEVATOR-GUEST", 2, 0.65, 0.84],
+    ["LB-3F-ELEVATOR-GUEST", 3, 0.68, 0.84],
+    ["LB-4F-ELEVATOR-GUEST", 4, 0.69, 0.82]
+  ],
+  "floor_edges": [
+    ["LB-1F-PATH-SOUTHEAST", "LB-1F-ELEVATOR-GUEST", "前往访客电梯。", "离开访客电梯后进入一楼通道。"],
+    ["LB-2F-PATH-SOUTHEAST", "LB-2F-ELEVATOR-GUEST", "前往访客电梯。", "离开访客电梯后进入二楼通道。"],
+    ["LB-3F-PATH-SOUTHEAST", "LB-3F-ELEVATOR-GUEST", "前往访客电梯。", "离开访客电梯后进入三楼通道。"],
+    ["LB-4F-ELEVATOR-GUEST", "LB-4F-OPEN-12", "到达四楼后，出电梯向右转。", "沿通道前往访客电梯。"],
+    ["LB-4F-OPEN-12", "LB-4F-OPEN-10", "到达矩形区域后再次右转。", "沿矩形区域返回电梯方向。"],
+    ["LB-4F-OPEN-10", "LB-4F-REGION-F", "学院介绍区域在左侧。", "离开学院介绍区域，返回电梯方向。"]
+  ]
+}
