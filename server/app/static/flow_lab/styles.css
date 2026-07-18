@@ -500,14 +500,43 @@ textarea:focus {
   pointer-events: none;
 }
 
-.board-lines line {
-  stroke: #60a5fa;
-  stroke-width: 1.1;
+.board-lines .flow-line {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   marker-end: url("#arrowHead");
 }
 
 .board-lines path {
-  fill: #60a5fa;
+  fill: #3b82f6;
+}
+
+.board-lines .line-main {
+  stroke: #2563eb;
+}
+
+.board-lines .line-image,
+.board-lines .line-evidence {
+  stroke: #0ea5e9;
+}
+
+.board-lines .line-visitor {
+  stroke: #10b981;
+}
+
+.board-lines .line-node,
+.board-lines .line-route {
+  stroke: #6366f1;
+}
+
+.board-lines .line-reply {
+  stroke: #ea580c;
+}
+
+.board-lines .line-tts {
+  stroke: #db2777;
 }
 
 .module-node,
@@ -519,7 +548,7 @@ textarea:focus {
 
 .module-node {
   z-index: 3;
-  width: 86px;
+  width: 100px;
   height: 52px;
   border: 1px solid #c7d2fe;
   background: #ffffff;
@@ -548,50 +577,50 @@ textarea:focus {
 }
 
 .module-node[data-module="user"] {
-  top: 50%;
+  top: 52%;
   left: 6%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="terminal"] {
-  top: 50%;
-  left: 20%;
+  top: 52%;
+  left: 25%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="vlm"] {
-  top: 24%;
-  left: 37%;
+  top: 27%;
+  left: 46%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="localizer"] {
-  top: 24%;
-  left: 52%;
+  top: 27%;
+  left: 63%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="context"] {
   top: 76%;
-  left: 52%;
+  left: 54%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="navigator"] {
-  top: 50%;
-  left: 67%;
+  top: 52%;
+  left: 78%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="composer"] {
-  top: 50%;
-  left: 82%;
+  top: 52%;
+  left: 89%;
   transform: translate(-50%, -50%);
 }
 
 .module-node[data-module="tts"] {
-  top: 50%;
-  left: 94%;
+  top: 52%;
+  left: 97%;
   transform: translate(-50%, -50%);
 }
 
@@ -613,43 +642,43 @@ textarea:focus {
 }
 
 .edge-a {
-  top: 35%;
-  left: 13%;
+  top: 37%;
+  left: 16%;
 }
 
 .edge-b {
-  top: 25%;
-  left: 29%;
-}
-
-.edge-c {
-  top: 12%;
-  left: 45%;
-}
-
-.edge-d {
-  top: 76%;
+  top: 38%;
   left: 35%;
 }
 
+.edge-c {
+  top: 14%;
+  left: 54%;
+}
+
+.edge-d {
+  top: 67%;
+  left: 39%;
+}
+
 .edge-e {
-  top: 35%;
-  left: 60%;
+  top: 38%;
+  left: 70%;
 }
 
 .edge-f {
   top: 67%;
-  left: 60%;
+  left: 69%;
 }
 
 .edge-g {
-  top: 35%;
-  left: 75%;
+  top: 37%;
+  left: 84%;
 }
 
 .edge-h {
   top: 67%;
-  left: 88%;
+  left: 94%;
 }
 
 .comm-toolbar {

@@ -537,9 +537,12 @@ function applyRoute(data) {
   state.route = data;
   const steps = data.steps || [];
   renderRouteSteps(steps);
+  const plannerLabel = data.planner === "qwen_vlm_map" ? "Qwen VLM 地图" : "SQLite 图算法";
+  const confidence =
+    typeof data.confidence === "number" ? ` / 置信度 ${data.confidence}` : "";
   const summary =
     data.total_distance_m !== undefined
-      ? `${data.total_distance_m} m / ${steps.length} 步`
+      ? `${data.total_distance_m} m / ${steps.length} 步 / ${plannerLabel}${confidence}`
       : "路线不可用";
   els.routeSummary.textContent = summary;
   els.routeCard.innerHTML = data.announcement
@@ -567,7 +570,7 @@ async function sendRoute() {
       location_records_count: state.guideContext?.location_records?.length || 0,
       route_request: payload,
     },
-    { note: "Navigator 使用 SQLite 地图节点和边生成确定性路线。" },
+    { note: "Navigator 优先上传楼层地图给 Qwen VLM 寻路；VLM 不可用时回退 SQLite 图算法。" },
   );
   const result = await requestJson("/api/v1/route", {
     method: "POST",

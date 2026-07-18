@@ -19,6 +19,7 @@ from .schemas import (
 )
 from .visual_localization import VisualLocalizer
 from .vlm import VlmClient
+from .vlm_navigation import VlmMapNavigator
 
 
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
@@ -63,6 +64,7 @@ def build_device_router(
     navigator: Navigator,
     localizer: VisualLocalizer,
     vlm_client: VlmClient,
+    vlm_map_navigator: VlmMapNavigator | None = None,
 ) -> APIRouter:
     router = APIRouter(prefix="/api/device/v1", tags=["xiaozhi-device"])
 
@@ -98,6 +100,9 @@ def build_device_router(
                 "image_localization": True,
                 "visual_localization": True,
                 "compact_route_announcement": True,
+                "vlm_map_route_planning": bool(
+                    vlm_map_navigator is not None and vlm_map_navigator.enabled
+                ),
                 "navigation_session": True,
                 "knowledge_search": True,
             },
@@ -273,7 +278,34 @@ def build_device_router(
         if not start:
             raise HTTPException(status_code=409, detail={"code": "CURRENT_LOCATION_REQUIRED", "message": "Localize before planning a route.", "retryable": True, "speak": "我需要先确认当前位置，请稍等。"})
         try:
-            result = navigator.plan(start, request.to_location, request.language, request.accessible_only)
+            result = None
+            if vlm_map_navigator is not None and vlm_map_navigator.enabled:
+                try:
+                    result = await vlm_map_navigator.plan(
+                        start,
+                        request.to_location,
+                        request.language,
+                        request.accessible_only,
+                    )
+                except LocationNotFoundError:
+                    raise
+                except (VlmNotConfiguredError, VlmResponseError) as exc:
+                    if vlm_map_navigator.strict:
+                        code = "VLM_NOT_CONFIGURED" if isinstance(exc, VlmNotConfiguredError) else "VLM_FAILED"
+                        status_code = 503 if isinstance(exc, VlmNotConfiguredError) else 502
+                        speak = "导航服务暂时不可用，请联系工作人员。"
+                        raise HTTPException(
+                            status_code=status_code,
+                            detail={
+                                "code": code,
+                                "message": str(exc),
+                                "retryable": isinstance(exc, VlmResponseError),
+                                "speak": speak,
+                            },
+                        ) from exc
+            if result is None:
+                resolved_to_location, _, _ = repository.resolve_destination(request.to_location)
+                result = navigator.plan(start, resolved_to_location, request.language, request.accessible_only)
         except LocationNotFoundError as exc:
             raise HTTPException(status_code=404, detail={"code": "DESTINATION_NOT_FOUND", "message": str(exc), "retryable": False, "speak": "没有找到这个目的地，请换一种说法。"}) from exc
         except RouteNotFoundError as exc:
@@ -296,6 +328,9 @@ def build_device_router(
             "destination_node": result.to_id,
             "announcement": result.announcement,
             "total_distance_m": round(result.total_distance_m, 1),
+            "planner": result.planner,
+            "confidence": result.confidence,
+            "assumptions": result.assumptions,
             "needs_relocalization": len(result.steps) > 1,
         }
         if debug_steps:

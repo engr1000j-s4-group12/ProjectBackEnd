@@ -39,6 +39,31 @@ CONTENT_EXTRACTION_PROMPT = """你正在为龙宾楼导览数据库预处理一�
 不要返回 Markdown，不要添加其他字段。管理端提供的上下文如下：
 """
 
+MAP_ROUTE_PROMPT = """你正在为龙宾楼导览终端做地图寻路。你会收到一张或多张楼层平面图，以及起点、终点和数据库中解析出的节点信息。
+请只基于上传的地图图像、地图上的房间号/设施标注、以及提供的节点信息生成路线；不要编造不存在的房间、展区或通道。
+
+硬性规则：
+1. 不要让路线穿墙，优先沿走廊、开口、楼梯或访客电梯行走。
+2. 跨楼层时优先使用访客电梯；1F 西北侧受限电梯不可作为访客路线。
+3. 龙宾楼该层外轮廓约 70 m x 80 m，距离只能按地图比例粗略估算。
+4. from_id 必须使用给定起点 ID，to_id 必须使用给定终点 ID。
+5. announcement 是最终给 TTS 的一句简短播报；steps 可以更详细，但仍应面向终端导航。
+
+返回一个 JSON 对象，格式必须是：
+{
+  "from_id": "给定起点 ID",
+  "to_id": "给定终点 ID",
+  "total_distance_m": 估算总距离数字,
+  "announcement": "一句简短播报",
+  "steps": [
+    {"from_id": "起点或中间点 ID/名称", "to_id": "中间点或终点 ID/名称", "distance_m": 估算距离数字, "instruction": "这一段怎么走"}
+  ],
+  "confidence": 0.0到1.0,
+  "assumptions": ["不确定或需要现场确认的点"]
+}
+不要返回 Markdown，不要添加其他字段。上下文如下：
+"""
+
 
 class VlmClient:
     def __init__(self) -> None:
@@ -191,4 +216,79 @@ class VlmClient:
         for field in ("recognized_texts", "visual_tags", "uncertain_items"):
             if not isinstance(result.get(field, []), list):
                 raise VlmResponseError(f"VLM 内容字段 {field} 必须是数组")
+        return result
+
+    async def plan_route_from_maps(
+        self,
+        map_images: list[dict],
+        context: dict,
+    ) -> dict:
+        if not self.configured:
+            raise VlmNotConfiguredError(
+                "请设置 VLM_BASE_URL、VLM_API_KEY 和 VLM_MODEL"
+            )
+
+        content: list[dict] = [
+            {
+                "type": "text",
+                "text": MAP_ROUTE_PROMPT
+                + json.dumps(context, ensure_ascii=False, separators=(",", ":")),
+            }
+        ]
+        for image in map_images:
+            encoded = base64.b64encode(image["content"]).decode("ascii")
+            content.extend(
+                [
+                    {"type": "text", "text": f"以下图片是龙宾楼 {image['floor']}F 平面图。"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:{image['content_type']};base64,{encoded}"
+                        },
+                    },
+                ]
+            )
+
+        payload = {
+            "model": self.model,
+            "temperature": 0,
+            "messages": [{"role": "user", "content": content}],
+        }
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        route_timeout = float(
+            os.getenv("VLM_ROUTE_TIMEOUT_SECONDS", str(max(self.timeout, 180.0)))
+        )
+        try:
+            async with httpx.AsyncClient(timeout=route_timeout) as client:
+                response = await client.post(
+                    self.chat_completions_url,
+                    headers=headers,
+                    json=payload,
+                )
+                response.raise_for_status()
+                body = response.json()
+            content_text = body["choices"][0]["message"]["content"]
+            result = self._extract_json(content_text)
+        except VlmResponseError:
+            raise
+        except httpx.HTTPStatusError as exc:
+            detail = exc.response.text[:500] if exc.response is not None else ""
+            raise VlmResponseError(
+                f"VLM 地图寻路失败：HTTP {exc.response.status_code} {detail}"
+            ) from exc
+        except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError) as exc:
+            raise VlmResponseError(
+                f"VLM 地图寻路失败：{exc.__class__.__name__}: {exc}"
+            ) from exc
+
+        for field in ("from_id", "to_id", "announcement"):
+            if not isinstance(result.get(field, ""), str):
+                raise VlmResponseError(f"VLM 路线字段 {field} 必须是字符串")
+        if not isinstance(result.get("steps", []), list):
+            raise VlmResponseError("VLM 路线字段 steps 必须是数组")
+        if not isinstance(result.get("assumptions", []), list):
+            raise VlmResponseError("VLM 路线字段 assumptions 必须是数组")
         return result

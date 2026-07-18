@@ -40,6 +40,7 @@ from .schemas import (
 )
 from .visual_localization import VisualLocalizer
 from .vlm import VlmClient
+from .vlm_navigation import VlmMapNavigator
 
 
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
@@ -58,6 +59,7 @@ def create_app(
     navigator = Navigator(repo)
     visual_localizer = VisualLocalizer(repo)
     vlm_client = VlmClient()
+    vlm_map_navigator = VlmMapNavigator(repo, vlm_client, ADMIN_DIR / "maps")
     upload_dir = Path(os.getenv("GUIDE_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
     upload_dir.mkdir(parents=True, exist_ok=True)
     app = FastAPI(
@@ -84,8 +86,55 @@ def create_app(
     app.include_router(build_data_router(store, vlm_client, upload_dir))
     app.include_router(build_mcp_router(store, navigator))
     app.include_router(
-        build_device_router(store, repo, navigator, visual_localizer, vlm_client)
+        build_device_router(
+            store,
+            repo,
+            navigator,
+            visual_localizer,
+            vlm_client,
+            vlm_map_navigator,
+        )
     )
+
+    def route_response_from_result(result) -> RouteResponse:
+        return RouteResponse(
+            from_id=result.from_id,
+            to_id=result.to_id,
+            total_distance_m=result.total_distance_m,
+            announcement=result.announcement,
+            steps=[step.__dict__ for step in result.steps],
+            planner=result.planner,
+            confidence=result.confidence,
+            assumptions=result.assumptions,
+        )
+
+    async def plan_route_result(
+        from_location: str,
+        to_location: str,
+        language: str,
+        accessible_only: bool,
+    ):
+        try:
+            if vlm_map_navigator.enabled:
+                return await vlm_map_navigator.plan(
+                    from_location,
+                    to_location,
+                    language,
+                    accessible_only,
+                )
+        except LocationNotFoundError:
+            raise
+        except (VlmNotConfiguredError, VlmResponseError) as exc:
+            if vlm_map_navigator.strict:
+                status_code = 503 if isinstance(exc, VlmNotConfiguredError) else 502
+                raise HTTPException(status_code=status_code, detail=str(exc)) from exc
+        resolved_to_location, _, _ = repo.resolve_destination(to_location)
+        return navigator.plan(
+            from_location,
+            resolved_to_location,
+            language,
+            accessible_only,
+        )
 
     def build_exhibit_context(
         exhibit_id: str,
@@ -231,7 +280,7 @@ def create_app(
     @app.post("/api/v1/route", response_model=RouteResponse, tags=["navigation"])
     async def route(request: RouteRequest) -> RouteResponse:
         try:
-            result = navigator.plan(
+            result = await plan_route_result(
                 request.from_location,
                 request.to_location,
                 request.language,
@@ -241,13 +290,7 @@ def create_app(
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         except RouteNotFoundError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
-        return RouteResponse(
-            from_id=result.from_id,
-            to_id=result.to_id,
-            total_distance_m=result.total_distance_m,
-            announcement=result.announcement,
-            steps=[step.__dict__ for step in result.steps],
-        )
+        return route_response_from_result(result)
 
     @app.get("/api/v1/exhibits", tags=["exhibits"])
     async def list_exhibits() -> dict[str, list[dict]]:
@@ -398,19 +441,13 @@ def create_app(
 
         if localization.node_id is not None:
             try:
-                route_result = navigator.plan(
+                route_result = await plan_route_result(
                     localization.node_id,
                     resolved_destination_id,
                     request.language,
                     request.accessible_only or bool(request.visitor_profile.accessibility_needs),
                 )
-                route_response = RouteResponse(
-                    from_id=route_result.from_id,
-                    to_id=route_result.to_id,
-                    total_distance_m=route_result.total_distance_m,
-                    announcement=route_result.announcement,
-                    steps=[step.__dict__ for step in route_result.steps],
-                )
+                route_response = route_response_from_result(route_result)
             except RouteNotFoundError as exc:
                 raise HTTPException(status_code=422, detail=str(exc)) from exc
             except LocationNotFoundError as exc:

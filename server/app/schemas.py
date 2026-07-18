@@ -98,6 +98,9 @@ class RouteResponse(BaseModel):
     total_distance_m: float
     announcement: str = ""
     steps: list[RouteStepResponse]
+    planner: str = "deterministic"
+    confidence: float | None = None
+    assumptions: list[str] = Field(default_factory=list)
 
 
 class ExhibitQuestionRequest(BaseModel):

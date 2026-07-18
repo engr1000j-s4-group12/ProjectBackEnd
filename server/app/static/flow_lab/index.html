@@ -148,7 +148,7 @@
                 <input id="accessibleOnly" type="checkbox" />
                 <span>只使用无障碍路线</span>
               </label>
-              <div id="routeCard" class="info-card">路线会从 SQLite 图数据实时生成。</div>
+              <div id="routeCard" class="info-card">路线会优先由 Qwen VLM 读取楼层地图生成；失败时回退 SQLite 图算法。</div>
             </div>
 
             <div class="quick-row">
@@ -176,18 +176,18 @@
             <div id="moduleBoard" class="module-board" aria-label="模块连线图">
               <svg class="board-lines" viewBox="0 0 100 100" aria-hidden="true">
                 <defs>
-                  <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                    <path d="M0,0 L8,4 L0,8 Z"></path>
+                  <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 Z"></path>
                   </marker>
                 </defs>
-                <line x1="9" y1="50" x2="17" y2="50"></line>
-                <line x1="24" y1="45" x2="34" y2="28"></line>
-                <line x1="40" y1="24" x2="48" y2="24"></line>
-                <line x1="24" y1="55" x2="47" y2="75"></line>
-                <line x1="55" y1="28" x2="63" y2="45"></line>
-                <line x1="55" y1="75" x2="63" y2="55"></line>
-                <line x1="70" y1="50" x2="78" y2="50"></line>
-                <line x1="85" y1="50" x2="91" y2="50"></line>
+                <path class="flow-line line-main" d="M13 52 H22"></path>
+                <path class="flow-line line-image" d="M30 52 C36 52 34 27 42 27"></path>
+                <path class="flow-line line-evidence" d="M50 27 H58"></path>
+                <path class="flow-line line-visitor" d="M30 52 C38 52 37 76 47 76"></path>
+                <path class="flow-line line-node" d="M66 27 C71 27 70 52 74 52"></path>
+                <path class="flow-line line-route" d="M59 76 C69 76 68 52 74 52"></path>
+                <path class="flow-line line-reply" d="M82 52 H88"></path>
+                <path class="flow-line line-tts" d="M95 52 H98"></path>
               </svg>
               <button class="module-node" data-module="user" type="button">User</button>
               <button class="module-node" data-module="terminal" type="button">Terminal</button>

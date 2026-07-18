@@ -3,6 +3,7 @@ from __future__ import annotations
 import heapq
 import re
 from dataclasses import dataclass
+from dataclasses import field
 from typing import Any
 
 from .errors import RouteNotFoundError
@@ -24,6 +25,9 @@ class RouteResult:
     total_distance_m: float
     announcement: str
     steps: list[RouteStep]
+    planner: str = "deterministic"
+    confidence: float | None = None
+    assumptions: list[str] = field(default_factory=list)
 
 
 class Navigator:
